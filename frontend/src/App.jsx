@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -14,6 +14,55 @@ import CarDetails from './components/CarDetails';
 import AdminPanel from './components/AdminPanel';
 import UserProfile from './components/UserProfile';
 import LoginModal from './components/LoginModal';
+import api from './config/axios';
+
+// Connection Test Component (remove after testing)
+const ConnectionStatus = () => {
+  const [status, setStatus] = useState('checking');
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    const checkConnection = async () => {
+      try {
+        const response = await api.get('/health');
+        if (response.data.status === 'healthy') {
+          setStatus('connected');
+          setMessage('✅ Backend connected successfully');
+        } else {
+          setStatus('error');
+          setMessage('⚠️ Backend responded but status unhealthy');
+        }
+      } catch (error) {
+        setStatus('error');
+        setMessage('❌ Cannot connect to backend. Please check if Render service is running.');
+        console.error('Backend connection error:', error);
+      }
+    };
+    checkConnection();
+  }, []);
+
+  if (status === 'checking') {
+    return (
+      <div className="fixed bottom-4 right-4 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg z-50 text-sm">
+        🔄 Connecting to backend...
+      </div>
+    );
+  }
+
+  if (status === 'error') {
+    return (
+      <div className="fixed bottom-4 right-4 bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg z-50 text-sm">
+        {message}
+      </div>
+    );
+  }
+
+  return (
+    <div className="fixed bottom-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg z-50 text-sm">
+      {message}
+    </div>
+  );
+};
 
 function AppContent() {
   const { isAuthenticated, isAdmin } = useAuth();
@@ -36,12 +85,26 @@ function AppContent() {
       </main>
       <Footer />
       <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
+      <ConnectionStatus />
       <Toaster 
         position="top-right"
         toastOptions={{
           style: {
             background: '#1f2937',
             color: '#fff',
+            borderRadius: '8px',
+          },
+          success: {
+            iconTheme: {
+              primary: '#10b981',
+              secondary: '#fff',
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: '#ef4444',
+              secondary: '#fff',
+            },
           },
         }}
       />
