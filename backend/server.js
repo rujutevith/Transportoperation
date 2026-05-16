@@ -38,7 +38,7 @@ app.use('/api/cars', carRoutes);
 app.get('/', (req, res) => {
   res.json({ 
     message: 'Car Rental API is running!',
-    frontend: 'https://car-rental-frontend.pages.dev'
+    frontend: 'https://transportoperation.pages.dev'
   });
 });
 
