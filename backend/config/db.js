@@ -1,30 +1,47 @@
 const mysql = require('mysql2');
 require('dotenv').config();
 
-// Determine if running in production
-const isProduction = process.env.NODE_ENV === 'production';
+// Parse database URL if provided, otherwise use individual credentials
+let dbConfig;
 
-// Database configuration
-const dbConfig = isProduction ? {
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  port: parseInt(process.env.DB_PORT) || 3306,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-  enableKeepAlive: true,
-  keepAliveInitialDelay: 0
-} : {
-  host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'car_management',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
-};
+if (process.env.DATABASE_URL) {
+  // Parse the DATABASE_URL
+  const url = new URL(process.env.DATABASE_URL);
+  dbConfig = {
+    host: url.hostname,
+    user: url.username,
+    password: url.password,
+    database: url.pathname.substring(1), // Remove leading slash
+    port: parseInt(url.port) || 4000,
+    ssl: {
+      minVersion: 'TLSv1.2',
+      rejectUnauthorized: true
+    },
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+  };
+} else {
+  // Use individual environment variables
+  dbConfig = {
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'car_management',
+    port: parseInt(process.env.DB_PORT) || 3306,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+  };
+}
+
+// Add SSL for production if needed
+if (process.env.NODE_ENV === 'production' && !process.env.DATABASE_URL) {
+  dbConfig.ssl = {
+    minVersion: 'TLSv1.2',
+    rejectUnauthorized: true
+  };
+}
 
 // Create connection pool
 const pool = mysql.createPool(dbConfig);
@@ -36,13 +53,15 @@ async function testConnection() {
     const connection = await db.getConnection();
     console.log('✅ MySQL database connected successfully');
     console.log(`📊 Database: ${dbConfig.database}`);
-    console.log(`🌍 Environment: ${isProduction ? 'Production' : 'Development'}`);
     connection.release();
   } catch (err) {
     console.error('❌ MySQL connection failed:', err.message);
-    if (!isProduction) {
-      console.warn('⚠️ Make sure MySQL is running and credentials are correct');
-    }
+    console.error('📋 Connection config:', {
+      host: dbConfig.host,
+      user: dbConfig.user,
+      database: dbConfig.database,
+      port: dbConfig.port
+    });
   }
 }
 
