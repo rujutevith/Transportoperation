@@ -2,7 +2,7 @@ const mysql = require('mysql2');
 require('dotenv').config();
 
 // Production (TiDB Cloud) or Development (local)
-const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = process.env.NODE_ENV === 'mysql://4EvoPxS7nqb9zrs.root:IvaOgnEBXvRCeA1x@gateway01.eu-central-1.prod.aws.tidbcloud.com:4000/sys';
 
 const dbConfig = isProduction ? {
   host: process.env.DB_HOST,
@@ -20,7 +20,7 @@ const dbConfig = isProduction ? {
 } : {
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
+  password: process.env.DB_PASSWORD || 'king@90048T',
   database: process.env.DB_NAME || 'car_management',
   waitForConnections: true,
   connectionLimit: 10,
