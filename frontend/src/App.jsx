@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
+import { Toaster, toast } from 'react-hot-toast';  // ✅ Make sure toast is imported
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
 import Navbar from './components/Navbar';
@@ -16,7 +16,7 @@ import UserProfile from './components/UserProfile';
 import LoginModal from './components/LoginModal';
 import api from './config/axios';
 
-// Connection Test Component (remove after testing)
+// Connection Status Component
 const ConnectionStatus = () => {
   const [status, setStatus] = useState('checking');
   const [message, setMessage] = useState('');
@@ -24,8 +24,10 @@ const ConnectionStatus = () => {
   useEffect(() => {
     const checkConnection = async () => {
       try {
-        const response = await api.get('/health');
-        if (response.data.status === 'healthy') {
+        const API_URL = import.meta.env.VITE_API_URL || 'https://transportoperation.onrender.com';
+        const response = await fetch(`${API_URL}/health`);
+        
+        if (response.ok) {
           setStatus('connected');
           setMessage('✅ Backend connected successfully');
         } else {
@@ -34,7 +36,7 @@ const ConnectionStatus = () => {
         }
       } catch (error) {
         setStatus('error');
-        setMessage('❌ Cannot connect to backend. Please check if Render service is running.');
+        setMessage('❌ Cannot connect to backend');
         console.error('Backend connection error:', error);
       }
     };
@@ -93,18 +95,6 @@ function AppContent() {
             background: '#1f2937',
             color: '#fff',
             borderRadius: '8px',
-          },
-          success: {
-            iconTheme: {
-              primary: '#10b981',
-              secondary: '#fff',
-            },
-          },
-          error: {
-            iconTheme: {
-              primary: '#ef4444',
-              secondary: '#fff',
-            },
           },
         }}
       />

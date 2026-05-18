@@ -1,34 +1,10 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios';
-import toast from 'react-hot-toast';
+import toast from 'react-hot-toast';  // Import toast only once
+import api from './config/axios';  // Use the configured axios instance
 
 const AuthContext = createContext();
 
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
-
-// Set up axios base URL - IMPORTANT for Render deployment
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-const api = axios.create({
-  baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  withCredentials: true
-});
-
-// Request interceptor to add token
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -69,9 +45,9 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (name, email, password, role = 'customer') => {
+  const register = async (name, email, password) => {
     try {
-      const response = await api.post('/api/auth/register', { name, email, password, role });
+      const response = await api.post('/api/auth/register', { name, email, password });
       const { token, user } = response.data;
       localStorage.setItem('token', token);
       setUser(user);
@@ -84,47 +60,10 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const googleLogin = async (credentialResponse) => {
-    try {
-      const response = await api.post('/api/auth/google', { token: credentialResponse.credential });
-      const { token, user } = response.data;
-      localStorage.setItem('token', token);
-      setUser(user);
-      toast.success(`Welcome, ${user.name}!`);
-      return true;
-    } catch (error) {
-      console.error('Google login error:', error.response?.data);
-      toast.error(error.response?.data?.error || 'Google login failed');
-      return false;
-    }
-  };
-
   const logout = () => {
     localStorage.removeItem('token');
     setUser(null);
     toast.success('Logged out successfully');
-  };
-
-  const forgotPassword = async (email) => {
-    try {
-      const response = await api.post('/api/auth/forgot-password', { email });
-      toast.success(response.data.message);
-      return true;
-    } catch (error) {
-      toast.error(error.response?.data?.error || 'Failed to send reset link');
-      return false;
-    }
-  };
-
-  const resetPassword = async (resetToken, newPassword) => {
-    try {
-      const response = await api.post('/api/auth/reset-password', { token: resetToken, newPassword });
-      toast.success(response.data.message);
-      return true;
-    } catch (error) {
-      toast.error(error.response?.data?.error || 'Failed to reset password');
-      return false;
-    }
   };
 
   const value = {
@@ -134,10 +73,7 @@ export const AuthProvider = ({ children }) => {
     isAdmin: user?.role === 'admin',
     login,
     register,
-    googleLogin,
     logout,
-    forgotPassword,
-    resetPassword
   };
 
   return (
