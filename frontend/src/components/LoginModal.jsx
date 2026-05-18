@@ -5,8 +5,8 @@ import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import toast from 'react-hot-toast';
 
-// REPLACE THIS WITH YOUR ACTUAL GOOGLE CLIENT ID
-const GOOGLE_CLIENT_ID = '954770624824-vc9tci3jk9di1t1qo0tkgumei4qsu1aa.apps.googleusercontent.com'; // <-- CHANGE THIS!
+// Your Google Client ID
+const GOOGLE_CLIENT_ID = '954770624824-vc9tci3jk9di1t1qo0tkgumei4qsu1aa.apps.googleusercontent.com';
 
 const LoginModalContent = ({ isOpen, onClose }) => {
   const { t } = useLanguage();
@@ -34,37 +34,68 @@ const LoginModalContent = ({ isOpen, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validation
+    if (!isLogin && formData.password !== formData.confirmPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
+    
+    if (!isLogin && formData.password.length < 6) {
+      toast.error('Password must be at least 6 characters');
+      return;
+    }
+    
     setLoading(true);
 
+    let success;
     if (isLogin) {
-      const success = await login(formData.email, formData.password);
-      if (success) onClose();
+      success = await login(formData.email, formData.password);
     } else {
-      if (formData.password !== formData.confirmPassword) {
-        toast.error('Passwords do not match');
-        setLoading(false);
-        return;
-      }
-      const success = await register(formData.name, formData.email, formData.password);
-      if (success) onClose();
+      success = await register(formData.name, formData.email, formData.password);
+    }
+    
+    if (success) {
+      // Clear form
+      setFormData({
+        name: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
+      });
+      onClose();
     }
     setLoading(false);
   };
 
   const handleForgotPassword = async (e) => {
     e.preventDefault();
+    if (!resetEmail) {
+      toast.error('Please enter your email address');
+      return;
+    }
     setLoading(true);
-    await forgotPassword(resetEmail);
-    setShowForgotPassword(false);
-    setResetEmail('');
+    const success = await forgotPassword(resetEmail);
+    if (success) {
+      setShowForgotPassword(false);
+      setResetEmail('');
+      toast.success('Password reset link sent to your email');
+    }
     setLoading(false);
   };
 
   const handleGoogleSuccess = async (credentialResponse) => {
     setLoading(true);
     const success = await googleLogin(credentialResponse);
-    if (success) onClose();
+    if (success) {
+      onClose();
+    }
     setLoading(false);
+  };
+
+  const handleGoogleError = () => {
+    toast.error('Google login failed. Please try again.');
+    console.error('Google login error');
   };
 
   return (
@@ -141,6 +172,9 @@ const LoginModalContent = ({ isOpen, onClose }) => {
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                 </div>
+                {!isLogin && (
+                  <p className="text-xs text-gray-500 mt-1">Password must be at least 6 characters</p>
+                )}
               </div>
 
               {!isLogin && (
@@ -176,9 +210,9 @@ const LoginModalContent = ({ isOpen, onClose }) => {
               <button
                 type="submit"
                 disabled={loading}
-                className="btn-primary w-full py-3"
+                className="btn-primary w-full py-3 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? 'Loading...' : (isLogin ? 'Sign In' : 'Sign Up')}
+                {loading ? 'Processing...' : (isLogin ? 'Sign In' : 'Sign Up')}
               </button>
             </form>
 
@@ -192,26 +226,29 @@ const LoginModalContent = ({ isOpen, onClose }) => {
             </div>
 
             {/* Google Login Button */}
-            {GOOGLE_CLIENT_ID !== 'YOUR_ACTUAL_GOOGLE_CLIENT_ID_HERE' && GOOGLE_CLIENT_ID !== '' ? (
+            <div className="flex justify-center">
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
-                onError={() => toast.error('Google login failed')}
+                onError={handleGoogleError}
                 useOneTap={false}
                 text="continue_with"
                 shape="rectangular"
                 theme="outline"
+                size="large"
               />
-            ) : (
-              <div className="text-center p-3 bg-yellow-900/30 rounded-lg">
-                <p className="text-yellow-500 text-sm">
-                  ⚠️ Google Sign-In not configured. Please add your Google Client ID.
-                </p>
-              </div>
-            )}
+            </div>
 
             <div className="mt-6 text-center">
               <button
-                onClick={() => setIsLogin(!isLogin)}
+                onClick={() => {
+                  setIsLogin(!isLogin);
+                  setFormData({
+                    name: '',
+                    email: '',
+                    password: '',
+                    confirmPassword: ''
+                  });
+                }}
                 className="text-gray-400 hover:text-white transition"
               >
                 {isLogin ? "Don't have an account? Sign Up" : "Already have an account? Sign In"}
@@ -239,7 +276,7 @@ const LoginModalContent = ({ isOpen, onClose }) => {
               <button
                 type="submit"
                 disabled={loading}
-                className="btn-primary w-full py-3"
+                className="btn-primary w-full py-3 disabled:opacity-50"
               >
                 {loading ? 'Sending...' : 'Send Reset Link'}
               </button>

@@ -33,7 +33,16 @@ const carRoutes = require('./routes/carRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/cars', carRoutes);
-
+// Add this BEFORE your routes in server.js
+app.use((req, res, next) => {
+  // Log all requests for debugging
+  console.log(`${req.method} ${req.url}`);
+  
+  // Allow these methods globally
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  
+  next();
+});
 // Root route
 app.get('/', (req, res) => {
   res.json({ 
