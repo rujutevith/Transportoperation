@@ -1,49 +1,27 @@
 const mysql = require('mysql2');
 require('dotenv').config();
 
-// Parse database URL if provided, otherwise use individual credentials
-let dbConfig;
+console.log('📡 Connecting to TiDB Cloud...');
+console.log(`   Host: ${process.env.DB_HOST}`);
+console.log(`   Database: ${process.env.DB_NAME}`);
+console.log(`   User: ${process.env.DB_USER}`);
 
-if (process.env.DATABASE_URL) {
-  // Parse the DATABASE_URL
-  const url = new URL(process.env.DATABASE_URL);
-  dbConfig = {
-    host: url.hostname,
-    user: url.username,
-    password: url.password,
-    database: url.pathname.substring(1), // Remove leading slash
-    port: parseInt(url.port) || 4000,
-    ssl: {
-      minVersion: 'TLSv1.2',
-      rejectUnauthorized: true
-    },
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-  };
-} else {
-  // Use individual environment variables
-  dbConfig = {
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'car_management',
-    port: parseInt(process.env.DB_PORT) || 3306,
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
-  };
-}
-
-// Add SSL for production if needed
-if (process.env.NODE_ENV === 'production' && !process.env.DATABASE_URL) {
-  dbConfig.ssl = {
+const dbConfig = {
+  host: process.env.DB_HOST || 'gateway01.eu-central-1.prod.aws.tidbcloud.com',
+  user: process.env.DB_USER || '3o18F1vsSMaVEgu.isingi_3FEm4eJL',
+  password: process.env.DB_PASSWORD || 'IvaOgnEBXvRCeA1x',
+  database: process.env.DB_NAME || 'car_management',
+  port: parseInt(process.env.DB_PORT) || 4000,
+  ssl: {
     minVersion: 'TLSv1.2',
-    rejectUnauthorized: true
-  };
-}
+    rejectUnauthorized: false  // Set to false for testing
+  },
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+  connectTimeout: 30000
+};
 
-// Create connection pool
 const pool = mysql.createPool(dbConfig);
 const db = pool.promise();
 
@@ -51,17 +29,16 @@ const db = pool.promise();
 async function testConnection() {
   try {
     const connection = await db.getConnection();
-    console.log('✅ MySQL database connected successfully');
-    console.log(`📊 Database: ${dbConfig.database}`);
+    console.log('✅ TiDB Cloud connected successfully');
+    
+    const [result] = await connection.query('SELECT DATABASE() as current_db, USER() as current_user');
+    console.log(`📊 Database: ${result[0].current_db}`);
+    console.log(`👤 User: ${result[0].current_user}`);
+    
     connection.release();
   } catch (err) {
-    console.error('❌ MySQL connection failed:', err.message);
-    console.error('📋 Connection config:', {
-      host: dbConfig.host,
-      user: dbConfig.user,
-      database: dbConfig.database,
-      port: dbConfig.port
-    });
+    console.error('❌ TiDB Cloud connection failed:', err.message);
+    console.error('   Please check your environment variables in Render');
   }
 }
 
