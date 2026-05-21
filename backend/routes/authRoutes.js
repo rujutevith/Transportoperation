@@ -1,13 +1,12 @@
 const express = require('express');
+const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../config/db');
 
-const router = express.Router();
-
-// REGISTER - Create new account
+// REGISTER
 router.post('/register', async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
   
   if (!name || !email || !password) {
     return res.status(400).json({ error: 'All fields are required' });
@@ -26,12 +25,12 @@ router.post('/register', async (req, res) => {
     // Create user
     const [result] = await db.query(
       'INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)',
-      [name, email, hashedPassword, 'customer']
+      [name, email, hashedPassword, role || 'customer']
     );
     
     // Generate token
     const token = jwt.sign(
-      { id: result.insertId, email, role: 'customer' },
+      { id: result.insertId, email, role: role || 'customer' },
       process.env.JWT_SECRET || 'your-secret-key',
       { expiresIn: '7d' }
     );
@@ -39,7 +38,7 @@ router.post('/register', async (req, res) => {
     res.json({
       success: true,
       token,
-      user: { id: result.insertId, name, email, role: 'customer' }
+      user: { id: result.insertId, name, email, role: role || 'customer' }
     });
   } catch (error) {
     console.error('Register error:', error);
@@ -47,7 +46,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// LOGIN - Sign in existing user
+// LOGIN
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   
@@ -56,21 +55,18 @@ router.post('/login', async (req, res) => {
   }
   
   try {
-    // Find user
     const [users] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
     if (users.length === 0) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
     
     const user = users[0];
-    
-    // Check password
     const validPassword = await bcrypt.compare(password, user.password);
+    
     if (!validPassword) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
     
-    // Generate token
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role },
       process.env.JWT_SECRET || 'your-secret-key',
@@ -88,7 +84,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// GET CURRENT USER - Verify token and get user info
+// GET CURRENT USER
 router.get('/me', async (req, res) => {
   const token = req.headers.authorization?.split(' ')[1];
   
@@ -98,7 +94,7 @@ router.get('/me', async (req, res) => {
   
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
-    const [users] = await db.query('SELECT id, name, email, role, created_at FROM users WHERE id = ?', [decoded.id]);
+    const [users] = await db.query('SELECT id, name, email, role FROM users WHERE id = ?', [decoded.id]);
     
     if (users.length === 0) {
       return res.status(404).json({ error: 'User not found' });
@@ -110,49 +106,9 @@ router.get('/me', async (req, res) => {
   }
 });
 
-// GOOGLE LOGIN
-router.post('/google', async (req, res) => {
-  const { token } = req.body;
-  
-  try {
-    const { OAuth2Client } = require('google-auth-library');
-    const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-    
-    const ticket = await client.verifyIdToken({
-      idToken: token,
-      audience: process.env.GOOGLE_CLIENT_ID
-    });
-    
-    const payload = ticket.getPayload();
-    const { email, name, sub: googleId } = payload;
-    
-    // Check if user exists
-    let [users] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
-    let user;
-    
-    if (users.length === 0) {
-      // Create new user
-      const [result] = await db.query(
-        'INSERT INTO users (name, email, google_id, role) VALUES (?, ?, ?, ?)',
-        [name, email, googleId, 'customer']
-      );
-      user = { id: result.insertId, name, email, role: 'customer' };
-    } else {
-      user = users[0];
-    }
-    
-    // Generate JWT
-    const jwtToken = jwt.sign(
-      { id: user.id, email: user.email, role: user.role },
-      process.env.JWT_SECRET || 'your-secret-key',
-      { expiresIn: '7d' }
-    );
-    
-    res.json({ success: true, token: jwtToken, user });
-  } catch (error) {
-    console.error('Google auth error:', error);
-    res.status(500).json({ error: 'Google authentication failed' });
-  }
+// LOGOUT
+router.post('/logout', (req, res) => {
+  res.json({ success: true, message: 'Logged out successfully' });
 });
 
 module.exports = router;

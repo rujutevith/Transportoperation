@@ -1,20 +1,20 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const db = require('./config/db');  // ✅ Add database connection
+const db = require('./config/db');
 
 dotenv.config();
 
 const app = express();
 
-// IMPORTANT: Allow Cloudflare Pages frontend
+// CORS configuration
 app.use(cors({
   origin: [
     'http://localhost:3000',
     'http://localhost:5173',
     'https://transportoperation.pages.dev',
     'https://*.pages.dev',
-    'https://transportoperation-1.onrender.com'
+    'https://transportoperation.onrender.com'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -24,10 +24,9 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Log all requests for debugging
+// Request logger
 app.use((req, res, next) => {
   console.log(`📨 ${req.method} ${req.url}`);
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   next();
 });
 
@@ -39,8 +38,8 @@ app.get('/health', (req, res) => {
 // ==================== DATABASE DEBUG ENDPOINT ====================
 app.get('/api/debug-db', async (req, res) => {
   try {
-    // Test simple query
-    const [result] = await db.query('SELECT 1 as test, DATABASE() as current_db, USER() as current_user');
+    // Test simple query - TiDB compatible
+    const [result] = await db.query('SELECT 1 as test, DATABASE() as current_db');
     
     // Check if cars table exists
     const [tables] = await db.query("SHOW TABLES LIKE 'cars'");
@@ -48,7 +47,7 @@ app.get('/api/debug-db', async (req, res) => {
     // Get car count if table exists
     let carCount = 0;
     let sampleCars = [];
-    if (tables.length > 0) {
+    if (tables && tables.length > 0) {
       const [count] = await db.query('SELECT COUNT(*) as count FROM cars');
       carCount = count[0].count;
       
@@ -60,10 +59,8 @@ app.get('/api/debug-db', async (req, res) => {
     
     res.json({
       success: true,
-      connection: 'OK',
       current_database: result[0].current_db,
-      current_user: result[0].current_user,
-      cars_table_exists: tables.length > 0,
+      cars_table_exists: tables && tables.length > 0,
       car_count: carCount,
       sample_cars: sampleCars,
       timestamp: new Date().toISOString()
@@ -101,10 +98,20 @@ app.get('/', (req, res) => {
 });
 
 // ==================== 404 HANDLER ====================
-app.use('*', (req, res) => {
+app.use((req, res) => {
   res.status(404).json({ 
     error: 'Route not found',
     message: `Cannot ${req.method} ${req.url}`
+  });
+});
+
+// ==================== ERROR HANDLER ====================
+app.use((err, req, res, next) => {
+  console.error('Server error:', err);
+  res.status(500).json({ 
+    success: false,
+    error: 'Internal server error',
+    message: err.message 
   });
 });
 
