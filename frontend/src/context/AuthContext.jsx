@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import api from '../config/axios';  // ✅ Correct path
+import api from '../config/axios';
 
 const AuthContext = createContext();
 
@@ -45,9 +45,9 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (name, email, password) => {
+  const register = async (name, email, password, role = 'customer') => {
     try {
-      const response = await api.post('/api/auth/register', { name, email, password });
+      const response = await api.post('/api/auth/register', { name, email, password, role });
       const { token, user } = response.data;
       localStorage.setItem('token', token);
       setUser(user);
@@ -60,10 +60,50 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const googleLogin = async (credentialResponse) => {
+    try {
+      console.log('Sending Google token to backend...');
+      const response = await api.post('/api/auth/google', { 
+        token: credentialResponse.credential 
+      });
+      
+      const { token, user } = response.data;
+      localStorage.setItem('token', token);
+      setUser(user);
+      return true;
+    } catch (error) {
+      console.error('Google login error:', error.response?.data || error.message);
+      toast.error(error.response?.data?.error || 'Google login failed');
+      return false;
+    }
+  };
+
   const logout = () => {
     localStorage.removeItem('token');
     setUser(null);
     toast.success('Logged out successfully');
+  };
+
+  const forgotPassword = async (email) => {
+    try {
+      const response = await api.post('/api/auth/forgot-password', { email });
+      toast.success(response.data.message);
+      return true;
+    } catch (error) {
+      toast.error(error.response?.data?.error || 'Failed to send reset link');
+      return false;
+    }
+  };
+
+  const resetPassword = async (resetToken, newPassword) => {
+    try {
+      const response = await api.post('/api/auth/reset-password', { token: resetToken, newPassword });
+      toast.success(response.data.message);
+      return true;
+    } catch (error) {
+      toast.error(error.response?.data?.error || 'Failed to reset password');
+      return false;
+    }
   };
 
   const value = {
@@ -73,7 +113,10 @@ export const AuthProvider = ({ children }) => {
     isAdmin: user?.role === 'admin',
     login,
     register,
+    googleLogin,
     logout,
+    forgotPassword,
+    resetPassword
   };
 
   return (

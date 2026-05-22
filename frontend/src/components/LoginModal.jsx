@@ -35,7 +35,6 @@ const LoginModalContent = ({ isOpen, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validation
     if (!isLogin && formData.password !== formData.confirmPassword) {
       toast.error('Passwords do not match');
       return;
@@ -56,7 +55,6 @@ const LoginModalContent = ({ isOpen, onClose }) => {
     }
     
     if (success) {
-      // Clear form
       setFormData({
         name: '',
         email: '',
@@ -85,17 +83,31 @@ const LoginModalContent = ({ isOpen, onClose }) => {
   };
 
   const handleGoogleSuccess = async (credentialResponse) => {
-    setLoading(true);
-    const success = await googleLogin(credentialResponse);
-    if (success) {
-      onClose();
+    console.log('Google login response received');
+    
+    if (!credentialResponse || !credentialResponse.credential) {
+      toast.error('Google login failed: No credential received');
+      return;
     }
-    setLoading(false);
+    
+    setLoading(true);
+    try {
+      const success = await googleLogin(credentialResponse);
+      if (success) {
+        toast.success('Google login successful!');
+        onClose();
+      }
+    } catch (error) {
+      console.error('Google login error:', error);
+      toast.error('Google login failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleGoogleError = () => {
-    toast.error('Google login failed. Please try again.');
-    console.error('Google login error');
+    console.error('Google login error occurred');
+    toast.error('Google login failed. Please try again or use email login.');
   };
 
   return (
@@ -235,6 +247,7 @@ const LoginModalContent = ({ isOpen, onClose }) => {
                 shape="rectangular"
                 theme="outline"
                 size="large"
+                width="100%"
               />
             </div>
 
