@@ -1,20 +1,20 @@
 import axios from 'axios';
 
-// Get API URL from environment or use default
+// Use the Render backend URL
 const API_URL = import.meta.env.VITE_API_URL || 'https://transportoperation.onrender.com';
 
-console.log('🔗 API URL:', API_URL);  // Debug log
+console.log('🔗 API Base URL:', API_URL);
 
 const api = axios.create({
   baseURL: API_URL,
-  timeout: 30000,  // Increased timeout
+  timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: false  // Set to false for CORS issues
+  withCredentials: false
 });
 
-// Request interceptor
+// Request interceptor to add auth token
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -30,10 +30,10 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor
+// Response interceptor for error handling
 api.interceptors.response.use(
   (response) => {
-    console.log(`📥 Response:`, response.status);
+    console.log(`📥 Response: ${response.status} ${response.config.url}`);
     return response;
   },
   (error) => {

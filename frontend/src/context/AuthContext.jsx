@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import toast from 'react-hot-toast';  // Import toast only once
-import api from './config/axios';  // Use the configured axios instance
+import toast from 'react-hot-toast';
+import api from '../config/axios';  // ✅ Correct path
 
 const AuthContext = createContext();
 
