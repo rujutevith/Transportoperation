@@ -19,19 +19,13 @@ const Cars = () => {
   const fetchCars = async () => {
     try {
       setLoading(true);
-      console.log('Fetching from:', `${API_URL}/api/cars`);
-      
       const response = await axios.get(`${API_URL}/api/cars`);
-      console.log('Response:', response.data);
       
-      // Extract cars array safely
       let carsArray = [];
       if (response.data && response.data.success && Array.isArray(response.data.cars)) {
         carsArray = response.data.cars;
       } else if (Array.isArray(response.data)) {
         carsArray = response.data;
-      } else {
-        carsArray = [];
       }
       
       setCars(carsArray);
@@ -44,7 +38,6 @@ const Cars = () => {
     }
   };
 
-  // Safe filter
   const filteredCars = Array.isArray(cars) && cars.length > 0
     ? cars.filter(car => {
         const searchMatch = (car.brand || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -95,9 +88,7 @@ const Cars = () => {
 
       {filteredCars.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-gray-400 text-lg">
-            No cars available.
-          </p>
+          <p className="text-gray-400 text-lg">No cars available.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
