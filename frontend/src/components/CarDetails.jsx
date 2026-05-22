@@ -3,15 +3,15 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Calendar, Fuel, Settings, Users, Shield, Clock, ArrowLeft, CheckCircle } from 'lucide-react';
-import { useLanguage } from '../context/LanguageContext';
 
 const CarDetails = () => {
-  const { t } = useLanguage();
   const { id } = useParams();
   const navigate = useNavigate();
   const [car, setCar] = useState(null);
   const [loading, setLoading] = useState(true);
   const [rentalDays, setRentalDays] = useState(1);
+
+  const API_URL = import.meta.env.VITE_API_URL || 'https://transportoperation.onrender.com';
 
   useEffect(() => {
     fetchCar();
@@ -19,10 +19,28 @@ const CarDetails = () => {
 
   const fetchCar = async () => {
     try {
-      const response = await axios.get(`/api/cars/${id}`);
-      setCar(response.data);
+      setLoading(true);
+      const response = await axios.get(`${API_URL}/api/cars/${id}`);
+      
+      // Extract car from response
+      let carData = null;
+      if (response.data && response.data.success && response.data.car) {
+        carData = response.data.car;
+      } else if (response.data && response.data.car) {
+        carData = response.data.car;
+      } else if (response.data && !response.data.success) {
+        carData = response.data;
+      }
+      
+      if (carData) {
+        setCar(carData);
+      } else {
+        toast.error('Car not found');
+        navigate('/cars');
+      }
     } catch (error) {
-      toast.error('Failed to fetch car details');
+      console.error('Error fetching car:', error);
+      toast.error('Failed to load car details');
       navigate('/cars');
     } finally {
       setLoading(false);
@@ -31,7 +49,6 @@ const CarDetails = () => {
 
   const handleRentNow = () => {
     navigate('/rent');
-    toast.success('Proceed with rental booking');
   };
 
   if (loading) {
@@ -53,7 +70,7 @@ const CarDetails = () => {
         className="flex items-center space-x-2 text-gray-400 hover:text-white mb-6 transition duration-300"
       >
         <ArrowLeft className="w-5 h-5" />
-        <span>{t('back')}</span>
+        <span>Back</span>
       </button>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -77,30 +94,30 @@ const CarDetails = () => {
                 <Star key={i} className="w-5 h-5 text-yellow-500 fill-current" />
               ))}
             </div>
-            <span className="text-gray-400 ml-2">(24 {t('reviews')})</span>
+            <span className="text-gray-400 ml-2">(24 reviews)</span>
           </div>
 
           <div className="space-y-3 mb-6">
             <div className="flex items-center justify-between py-2 border-b border-gray-800">
               <div className="flex items-center space-x-2 text-gray-300">
                 <Fuel className="w-5 h-5" />
-                <span>{t('fuel')}</span>
+                <span>Fuel Type</span>
               </div>
-              <span className="font-semibold">{car.fuel_type || t('petrol')}</span>
+              <span className="font-semibold">{car.fuel_type || 'Petrol'}</span>
             </div>
             <div className="flex items-center justify-between py-2 border-b border-gray-800">
               <div className="flex items-center space-x-2 text-gray-300">
                 <Settings className="w-5 h-5" />
-                <span>{t('transmission')}</span>
+                <span>Transmission</span>
               </div>
               <span className="font-semibold">{car.transmission || 'Automatic'}</span>
             </div>
             <div className="flex items-center justify-between py-2 border-b border-gray-800">
               <div className="flex items-center space-x-2 text-gray-300">
                 <Users className="w-5 h-5" />
-                <span>{t('seats')}</span>
+                <span>Seats</span>
               </div>
-              <span className="font-semibold">5 {t('seats')}</span>
+              <span className="font-semibold">5 Seats</span>
             </div>
             <div className="flex items-center justify-between py-2 border-b border-gray-800">
               <div className="flex items-center space-x-2 text-gray-300">
@@ -125,13 +142,13 @@ const CarDetails = () => {
 
           {/* Rental Calculator */}
           <div className="bg-gray-900 rounded-xl p-6 mb-6">
-            <h3 className="text-xl font-semibold mb-4">{t('rental_details')}</h3>
+            <h3 className="text-xl font-semibold mb-4">Rental Details</h3>
             <div className="flex items-center justify-between mb-4">
-              <span className="text-gray-300">{t('daily_rate')}</span>
+              <span className="text-gray-300">Daily Rate</span>
               <span className="text-2xl font-bold">${car.price}</span>
             </div>
             <div className="mb-4">
-              <label className="block text-gray-300 mb-2">{t('number_of_days')}</label>
+              <label className="block text-gray-300 mb-2">Number of Days</label>
               <input
                 type="number"
                 min="1"
@@ -141,28 +158,28 @@ const CarDetails = () => {
               />
             </div>
             <div className="flex items-center justify-between pt-4 border-t border-gray-800">
-              <span className="text-lg font-semibold">{t('total_price')}</span>
+              <span className="text-lg font-semibold">Total Price</span>
               <span className="text-2xl font-bold text-white">${totalPrice}</span>
             </div>
           </div>
 
           <button onClick={handleRentNow} className="btn-primary w-full py-3 text-lg">
-            {t('rent_this_car')}
+            Rent This Car Now
           </button>
 
           {/* Features */}
           <div className="mt-6 grid grid-cols-2 gap-4">
             <div className="flex items-center space-x-2 text-green-500">
               <CheckCircle className="w-5 h-5" />
-              <span className="text-sm">{t('free_cancellation_text')}</span>
+              <span className="text-sm">Free Cancellation</span>
             </div>
             <div className="flex items-center space-x-2 text-green-500">
               <Shield className="w-5 h-5" />
-              <span className="text-sm">{t('full_insurance')}</span>
+              <span className="text-sm">Full Insurance</span>
             </div>
             <div className="flex items-center space-x-2 text-green-500">
               <Clock className="w-5 h-5" />
-              <span className="text-sm">{t('support_247')}</span>
+              <span className="text-sm">24/7 Support</span>
             </div>
           </div>
         </div>
