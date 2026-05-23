@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
-import { Mail, Phone, MapPin, Clock, Send, MessageCircle, Instagram, Facebook, Twitter, Linkedin } from 'lucide-react';
+import { Mail, Phone, MapPin, Clock, Send, MessageCircle, Instagram, Facebook, Twitter, Linkedin, User } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 const Contact = () => {
@@ -21,23 +21,25 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    toast.success('Message sent successfully! We will get back to you soon.');
+    // In a real app, send this to your backend
+    toast.success(`Thank you ${formData.name}! We will get back to you soon.`);
     setFormData({ name: '', email: '', subject: '', message: '' });
   };
 
-  // WhatsApp number
+  // Owner personal info
+  const ownerName = 'Thierry';
+  const ownerEmail = 'kingthierryi52@gmail.com';
+  const ownerPhone = '+250 790 321 0519';
   const whatsappNumber = '2507903210519';
   const whatsappLink = `https://wa.me/${whatsappNumber}`;
-  
-  // Instagram username
   const instagramUsername = 'zodiac45';
   const instagramLink = `https://instagram.com/${instagramUsername}`;
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl md:text-4xl font-bold text-center mb-4">{t('contact_us') || 'Contact Us'}</h1>
+      <h1 className="text-3xl md:text-4xl font-bold text-center mb-4">Contact Us</h1>
       <p className="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
-        Have questions? We'd love to hear from you. Send us a message or reach out directly!
+        Have questions? We'd love to hear from you. Reach out directly or send us a message!
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -50,9 +52,11 @@ const Contact = () => {
               <div className="flex items-start space-x-3">
                 <Phone className="w-5 h-5 text-white mt-1" />
                 <div>
-                  <p className="font-semibold">Phone</p>
-                  <p className="text-gray-400">+250 790 321 0519</p>
-                  <p className="text-gray-400 text-sm">Mon-Fri, 9am-6pm</p>
+                  <p className="font-semibold">Call / WhatsApp</p>
+                  <p className="text-gray-400">{ownerPhone}</p>
+                  <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="text-green-500 text-sm hover:underline">
+                    Message on WhatsApp
+                  </a>
                 </div>
               </div>
               
@@ -60,8 +64,8 @@ const Contact = () => {
                 <Mail className="w-5 h-5 text-white mt-1" />
                 <div>
                   <p className="font-semibold">Email</p>
-                  <p className="text-gray-400">info@eliterent.com</p>
-                  <p className="text-gray-400">support@eliterent.com</p>
+                  <p className="text-gray-400">{ownerEmail}</p>
+                  <p className="text-gray-400 text-sm">support@eliterent.rw</p>
                 </div>
               </div>
               
@@ -70,7 +74,7 @@ const Contact = () => {
                 <div>
                   <p className="font-semibold">Address</p>
                   <p className="text-gray-400">Kigali, Rwanda</p>
-                  <p className="text-gray-400">KG 123 St, Kacyiru</p>
+                  <p className="text-gray-400 text-sm">KG 123 St, Kacyiru</p>
                 </div>
               </div>
               
@@ -80,6 +84,20 @@ const Contact = () => {
                   <p className="font-semibold">Business Hours</p>
                   <p className="text-gray-400">Monday - Friday: 8am - 8pm</p>
                   <p className="text-gray-400">Saturday - Sunday: 9am - 6pm</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Owner Profile */}
+            <div className="mt-6 pt-6 border-t border-gray-800">
+              <h4 className="font-semibold mb-4">Owner & Founder</h4>
+              <div className="flex items-center space-x-3">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                  <User className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <p className="text-white font-semibold">{ownerName}</p>
+                  <p className="text-gray-400 text-sm">Available 24/7 for inquiries</p>
                 </div>
               </div>
             </div>
@@ -110,23 +128,18 @@ const Contact = () => {
                 >
                   <Facebook className="w-5 h-5" />
                 </a>
-                <a 
-                  href="#"
-                  className="bg-sky-500 hover:bg-sky-600 text-white p-3 rounded-full transition duration-300"
-                >
-                  <Twitter className="w-5 h-5" />
-                </a>
               </div>
               <div className="mt-4">
-                <p className="text-gray-400 text-sm">WhatsApp: <strong className="text-white">+250 790 321 0519</strong></p>
-                <p className="text-gray-400 text-sm">Instagram: <strong className="text-white">@zodiac45</strong></p>
+                <p className="text-gray-400 text-sm">WhatsApp: <strong className="text-white">{ownerPhone}</strong></p>
+                <p className="text-gray-400 text-sm">Instagram: <strong className="text-white">@{instagramUsername}</strong></p>
+                <p className="text-gray-400 text-sm">Email: <strong className="text-white">{ownerEmail}</strong></p>
               </div>
             </div>
 
             <div className="mt-6 pt-6 border-t border-gray-800">
               <h4 className="font-semibold mb-2">Emergency Support</h4>
               <p className="text-gray-400 text-sm">
-                24/7 roadside assistance: <strong className="text-white">+250 788 123 456</strong>
+                24/7 roadside assistance: <strong className="text-white">{ownerPhone}</strong>
               </p>
             </div>
           </div>

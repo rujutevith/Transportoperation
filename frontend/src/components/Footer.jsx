@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Car, Mail, Phone, MapPin, MessageCircle, Instagram, Facebook, Twitter, Linkedin } from 'lucide-react';
+import { Car, Mail, Phone, MapPin, MessageCircle, Instagram, Facebook, Twitter, Linkedin, User } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 const Footer = () => {
@@ -11,6 +11,11 @@ const Footer = () => {
   const whatsappLink = `https://wa.me/${whatsappNumber}`;
   const instagramUsername = 'zodiac45';
   const instagramLink = `https://instagram.com/${instagramUsername}`;
+  
+  // Owner personal info
+  const ownerName = 'Thierry';
+  const ownerEmail = 'kingthierryi52@gmail.com';
+  const ownerPhone = '+250 790 321 0519';
 
   return (
     <footer className="bg-gray-900 border-t border-gray-800 mt-auto">
@@ -73,6 +78,7 @@ const Footer = () => {
               <li><Link to="/rent" className="text-gray-400 hover:text-white transition duration-300">Rent a Car</Link></li>
               <li><Link to="/about" className="text-gray-400 hover:text-white transition duration-300">About Us</Link></li>
               <li><Link to="/contact" className="text-gray-400 hover:text-white transition duration-300">Contact</Link></li>
+              <li><Link to="/profile" className="text-gray-400 hover:text-white transition duration-300">My Profile</Link></li>
             </ul>
           </div>
 
@@ -82,15 +88,15 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-center space-x-3 text-gray-400">
                 <Phone className="w-5 h-5" />
-                <span>+250 790 321 0519</span>
+                <span>{ownerPhone}</span>
               </li>
               <li className="flex items-center space-x-3 text-gray-400">
                 <MessageCircle className="w-5 h-5 text-green-500" />
-                <span>WhatsApp: +250 790 321 0519</span>
+                <span>WhatsApp: {ownerPhone}</span>
               </li>
               <li className="flex items-center space-x-3 text-gray-400">
                 <Mail className="w-5 h-5" />
-                <span>info@eliterent.rw</span>
+                <span>{ownerEmail}</span>
               </li>
               <li className="flex items-center space-x-3 text-gray-400">
                 <MapPin className="w-5 h-5" />
@@ -99,21 +105,38 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Owner & Newsletter */}
+          {/* Owner Profile */}
           <div>
             <h3 className="text-lg font-semibold text-white mb-4">Owner</h3>
-            <div className="mb-6">
-              <p className="text-white font-medium">Thierry</p>
-              <p className="text-gray-400 text-sm">Founder & CEO</p>
-              <a 
-                href={instagramLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-pink-500 text-sm flex items-center space-x-1 mt-1"
-              >
-                <Instagram className="w-4 h-4" />
-                <span>@zodiac45</span>
-              </a>
+            <div className="bg-gray-800 rounded-lg p-4 mb-6">
+              <div className="flex items-center space-x-3 mb-3">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                  <User className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <p className="text-white font-semibold">{ownerName}</p>
+                  <p className="text-gray-400 text-sm">Founder & CEO</p>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <a href={`mailto:${ownerEmail}`} className="text-gray-400 hover:text-white text-sm flex items-center space-x-2">
+                  <Mail className="w-4 h-4" />
+                  <span>{ownerEmail}</span>
+                </a>
+                <a href={`tel:${ownerPhone}`} className="text-gray-400 hover:text-white text-sm flex items-center space-x-2">
+                  <Phone className="w-4 h-4" />
+                  <span>{ownerPhone}</span>
+                </a>
+                <a 
+                  href={instagramLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-pink-500 text-sm flex items-center space-x-2"
+                >
+                  <Instagram className="w-4 h-4" />
+                  <span>@{instagramUsername}</span>
+                </a>
+              </div>
             </div>
             
             <h3 className="text-lg font-semibold text-white mb-4">Newsletter</h3>
@@ -137,12 +160,12 @@ const Footer = () => {
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">
           <p className="text-gray-400">
             &copy; {currentYear} EliteRent Rwanda. All rights reserved. | 
-            Designed with ❤️ by Thierry | 
+            Designed with ❤️ by {ownerName} | 
             <a href="#" className="hover:text-white ml-2">Privacy Policy</a> | 
             <a href="#" className="hover:text-white ml-2">Terms of Service</a>
           </p>
           <p className="text-gray-500 text-sm mt-2">
-            Premium Car Rental Services in Kigali, Rwanda
+            Contact: {ownerEmail} | Phone: {ownerPhone}
           </p>
         </div>
       </div>
