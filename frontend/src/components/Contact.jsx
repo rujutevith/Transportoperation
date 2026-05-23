@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
-import { Mail, Phone, MapPin, Clock, Send } from 'lucide-react';
+import { Mail, Phone, MapPin, Clock, Send, MessageCircle, Instagram, Facebook, Twitter, Linkedin } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 const Contact = () => {
@@ -25,32 +25,41 @@ const Contact = () => {
     setFormData({ name: '', email: '', subject: '', message: '' });
   };
 
+  // WhatsApp number
+  const whatsappNumber = '2507903210519';
+  const whatsappLink = `https://wa.me/${whatsappNumber}`;
+  
+  // Instagram username
+  const instagramUsername = 'zodiac45';
+  const instagramLink = `https://instagram.com/${instagramUsername}`;
+
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl md:text-4xl font-bold text-center mb-4">{t('contact_us')}</h1>
+      <h1 className="text-3xl md:text-4xl font-bold text-center mb-4">{t('contact_us') || 'Contact Us'}</h1>
       <p className="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
-        {t('contact_subtitle')}
+        Have questions? We'd love to hear from you. Send us a message or reach out directly!
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Contact Information */}
         <div className="lg:col-span-1">
           <div className="bg-gray-900 rounded-xl p-6 sticky top-24">
-            <h3 className="text-xl font-semibold mb-6">{t('get_in_touch')}</h3>
+            <h3 className="text-xl font-semibold mb-6">Get in Touch</h3>
             
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
                 <Phone className="w-5 h-5 text-white mt-1" />
                 <div>
-                  <p className="font-semibold">{t('phone')}</p>
-                  <p className="text-gray-400">+1 (555) 123-4567</p>
+                  <p className="font-semibold">Phone</p>
+                  <p className="text-gray-400">+250 790 321 0519</p>
+                  <p className="text-gray-400 text-sm">Mon-Fri, 9am-6pm</p>
                 </div>
               </div>
               
               <div className="flex items-start space-x-3">
                 <Mail className="w-5 h-5 text-white mt-1" />
                 <div>
-                  <p className="font-semibold">{t('email')}</p>
+                  <p className="font-semibold">Email</p>
                   <p className="text-gray-400">info@eliterent.com</p>
                   <p className="text-gray-400">support@eliterent.com</p>
                 </div>
@@ -59,26 +68,65 @@ const Contact = () => {
               <div className="flex items-start space-x-3">
                 <MapPin className="w-5 h-5 text-white mt-1" />
                 <div>
-                  <p className="font-semibold">{t('address')}</p>
-                  <p className="text-gray-400">123 Business Street</p>
-                  <p className="text-gray-400">New York, NY 10001</p>
+                  <p className="font-semibold">Address</p>
+                  <p className="text-gray-400">Kigali, Rwanda</p>
+                  <p className="text-gray-400">KG 123 St, Kacyiru</p>
                 </div>
               </div>
               
               <div className="flex items-start space-x-3">
                 <Clock className="w-5 h-5 text-white mt-1" />
                 <div>
-                  <p className="font-semibold">{t('business_hours')}</p>
-                  <p className="text-gray-400">{t('mon_fri')}</p>
-                  <p className="text-gray-400">{t('sat_sun')}</p>
+                  <p className="font-semibold">Business Hours</p>
+                  <p className="text-gray-400">Monday - Friday: 8am - 8pm</p>
+                  <p className="text-gray-400">Saturday - Sunday: 9am - 6pm</p>
                 </div>
               </div>
             </div>
 
+            {/* Social Media Section */}
             <div className="mt-6 pt-6 border-t border-gray-800">
-              <h4 className="font-semibold mb-2">{t('emergency_support')}</h4>
+              <h4 className="font-semibold mb-4">Connect With Us</h4>
+              <div className="flex space-x-4">
+                <a 
+                  href={whatsappLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-green-600 hover:bg-green-700 text-white p-3 rounded-full transition duration-300"
+                >
+                  <MessageCircle className="w-5 h-5" />
+                </a>
+                <a 
+                  href={instagramLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white p-3 rounded-full transition duration-300"
+                >
+                  <Instagram className="w-5 h-5" />
+                </a>
+                <a 
+                  href="#"
+                  className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full transition duration-300"
+                >
+                  <Facebook className="w-5 h-5" />
+                </a>
+                <a 
+                  href="#"
+                  className="bg-sky-500 hover:bg-sky-600 text-white p-3 rounded-full transition duration-300"
+                >
+                  <Twitter className="w-5 h-5" />
+                </a>
+              </div>
+              <div className="mt-4">
+                <p className="text-gray-400 text-sm">WhatsApp: <strong className="text-white">+250 790 321 0519</strong></p>
+                <p className="text-gray-400 text-sm">Instagram: <strong className="text-white">@zodiac45</strong></p>
+              </div>
+            </div>
+
+            <div className="mt-6 pt-6 border-t border-gray-800">
+              <h4 className="font-semibold mb-2">Emergency Support</h4>
               <p className="text-gray-400 text-sm">
-                {t('roadside_assistance_247')}: <strong className="text-white">+1 (555) 999-8888</strong>
+                24/7 roadside assistance: <strong className="text-white">+250 788 123 456</strong>
               </p>
             </div>
           </div>
@@ -89,7 +137,7 @@ const Contact = () => {
           <form onSubmit={handleSubmit} className="bg-gray-900 rounded-xl p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div>
-                <label className="block text-gray-300 mb-2">{t('your_name')} *</label>
+                <label className="block text-gray-300 mb-2">Your Name *</label>
                 <input
                   type="text"
                   name="name"
@@ -101,7 +149,7 @@ const Contact = () => {
                 />
               </div>
               <div>
-                <label className="block text-gray-300 mb-2">{t('email_address')} *</label>
+                <label className="block text-gray-300 mb-2">Email Address *</label>
                 <input
                   type="email"
                   name="email"
@@ -115,7 +163,7 @@ const Contact = () => {
             </div>
             
             <div className="mb-6">
-              <label className="block text-gray-300 mb-2">{t('subject')} *</label>
+              <label className="block text-gray-300 mb-2">Subject *</label>
               <input
                 type="text"
                 name="subject"
@@ -128,7 +176,7 @@ const Contact = () => {
             </div>
             
             <div className="mb-6">
-              <label className="block text-gray-300 mb-2">{t('message')} *</label>
+              <label className="block text-gray-300 mb-2">Message *</label>
               <textarea
                 name="message"
                 value={formData.message}
@@ -142,7 +190,7 @@ const Contact = () => {
             
             <button type="submit" className="btn-primary w-full py-3 flex items-center justify-center space-x-2">
               <Send className="w-5 h-5" />
-              <span>{t('send_message')}</span>
+              <span>Send Message</span>
             </button>
           </form>
         </div>
@@ -152,7 +200,7 @@ const Contact = () => {
       <div className="mt-12">
         <div className="bg-gray-900 rounded-xl overflow-hidden">
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.215!2d-74.006!3d40.7128!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a316bed2c0b%3A0x349f5b5d6b5b5b5b!2sNew%20York%2C%20NY!5e0!3m2!1sen!2sus!4v1699999999999!5m2!1sen!2sus"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3987.476985234324!2d30.1045513147537!3d-1.944130798602432!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19dca76cf6852d8d%3A0xf1975a5e6cbd2245!2sKigali%2C%20Rwanda!5e0!3m2!1sen!2srw!4v1699999999999!5m2!1sen!2srw"
             width="100%"
             height="400"
             style={{ border: 0 }}
