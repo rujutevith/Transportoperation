@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Car, Home, List, Calendar, Info, Phone, Menu, X, Globe, User, LogOut, Shield } from 'lucide-react';
+import { Car, Home, List, Calendar, Info, Phone, Menu, X, Globe, User, LogOut, Shield, LayoutDashboard } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 
@@ -15,7 +15,6 @@ const Navbar = ({ onLoginClick }) => {
   const navLinks = [
     { path: '/', name: 'home', icon: Home },
     { path: '/cars', name: 'cars', icon: List },
-    { path: '/rent', name: 'rent', icon: Calendar },
     { path: '/about', name: 'about', icon: Info },
     { path: '/contact', name: 'contact', icon: Phone },
   ];
@@ -36,7 +35,7 @@ const Navbar = ({ onLoginClick }) => {
           <Link to="/" className="flex items-center space-x-2 group">
             <Car className="w-8 h-8 text-white group-hover:scale-110 transition duration-300" />
             <span className="text-xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-              EliteRent
+              EliteRent Rwanda
             </span>
           </Link>
 
@@ -60,6 +59,36 @@ const Navbar = ({ onLoginClick }) => {
                 </Link>
               );
             })}
+            
+            {/* Dashboard Link for Authenticated Users */}
+            {isAuthenticated && !isAdmin && (
+              <Link
+                to="/dashboard"
+                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition duration-300 ${
+                  location.pathname === '/dashboard'
+                    ? 'bg-white text-black'
+                    : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                }`}
+              >
+                <LayoutDashboard className="w-4 h-4" />
+                <span>My Dashboard</span>
+              </Link>
+            )}
+
+            {/* Admin Panel Link for Admin Users */}
+            {isAdmin && (
+              <Link
+                to="/admin"
+                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition duration-300 ${
+                  location.pathname === '/admin'
+                    ? 'bg-white text-black'
+                    : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                }`}
+              >
+                <Shield className="w-4 h-4" />
+                <span>Admin Panel</span>
+              </Link>
+            )}
             
             {/* Language Selector */}
             <div className="relative ml-2">
@@ -111,6 +140,14 @@ const Navbar = ({ onLoginClick }) => {
                     <div className="fixed inset-0 z-40" onClick={() => setIsUserMenuOpen(false)}></div>
                     <div className="absolute right-0 mt-2 w-56 bg-gray-800 rounded-lg shadow-lg overflow-hidden z-50">
                       <Link
+                        to="/dashboard"
+                        onClick={() => setIsUserMenuOpen(false)}
+                        className="w-full px-4 py-2 text-left hover:bg-gray-700 transition duration-300 flex items-center space-x-2 text-gray-300"
+                      >
+                        <LayoutDashboard className="w-4 h-4" />
+                        <span>My Dashboard</span>
+                      </Link>
+                      <Link
                         to="/profile"
                         onClick={() => setIsUserMenuOpen(false)}
                         className="w-full px-4 py-2 text-left hover:bg-gray-700 transition duration-300 flex items-center space-x-2 text-gray-300"
@@ -154,12 +191,17 @@ const Navbar = ({ onLoginClick }) => {
 
           {/* Mobile Menu Button */}
           <div className="flex items-center space-x-4 md:hidden">
-            <button
-              onClick={onLoginClick}
-              className="px-3 py-1 bg-white text-black rounded-lg font-semibold text-sm"
-            >
-              {isAuthenticated ? user?.name?.split(' ')[0] : 'Sign In'}
-            </button>
+            {isAuthenticated && (
+              <span className="text-white text-sm">{user?.name?.split(' ')[0]}</span>
+            )}
+            {!isAuthenticated && (
+              <button
+                onClick={onLoginClick}
+                className="px-3 py-1 bg-white text-black rounded-lg font-semibold text-sm"
+              >
+                Sign In
+              </button>
+            )}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-white focus:outline-none"
@@ -192,6 +234,51 @@ const Navbar = ({ onLoginClick }) => {
               );
             })}
             
+            {isAuthenticated && !isAdmin && (
+              <Link
+                to="/dashboard"
+                onClick={() => setIsMenuOpen(false)}
+                className="flex items-center space-x-2 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800"
+              >
+                <LayoutDashboard className="w-5 h-5" />
+                <span>My Dashboard</span>
+              </Link>
+            )}
+            
+            {isAdmin && (
+              <Link
+                to="/admin"
+                onClick={() => setIsMenuOpen(false)}
+                className="flex items-center space-x-2 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800"
+              >
+                <Shield className="w-5 h-5" />
+                <span>Admin Panel</span>
+              </Link>
+            )}
+            
+            {isAuthenticated && (
+              <>
+                <Link
+                  to="/profile"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="flex items-center space-x-2 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800"
+                >
+                  <User className="w-5 h-5" />
+                  <span>My Profile</span>
+                </Link>
+                <button
+                  onClick={() => {
+                    logout();
+                    setIsMenuOpen(false);
+                  }}
+                  className="w-full flex items-center space-x-2 px-4 py-3 rounded-lg text-red-400 hover:bg-gray-800"
+                >
+                  <LogOut className="w-5 h-5" />
+                  <span>Logout</span>
+                </button>
+              </>
+            )}
+            
             {/* Mobile Language Selector */}
             <div className="px-4 py-3 border-t border-gray-800 mt-2">
               <p className="text-gray-400 mb-2">Language</p>
@@ -212,39 +299,6 @@ const Navbar = ({ onLoginClick }) => {
                 ))}
               </div>
             </div>
-
-            {isAuthenticated && (
-              <>
-                <Link
-                  to="/profile"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center space-x-2 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800"
-                >
-                  <User className="w-5 h-5" />
-                  <span>My Profile</span>
-                </Link>
-                {isAdmin && (
-                  <Link
-                    to="/admin"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center space-x-2 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800"
-                  >
-                    <Shield className="w-5 h-5" />
-                    <span>Admin Panel</span>
-                  </Link>
-                )}
-                <button
-                  onClick={() => {
-                    logout();
-                    setIsMenuOpen(false);
-                  }}
-                  className="w-full flex items-center space-x-2 px-4 py-3 rounded-lg text-red-400 hover:bg-gray-800"
-                >
-                  <LogOut className="w-5 h-5" />
-                  <span>Logout</span>
-                </button>
-              </>
-            )}
           </div>
         )}
       </div>

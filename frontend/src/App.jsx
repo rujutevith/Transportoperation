@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Toaster, toast } from 'react-hot-toast';  // ✅ MUST HAVE THIS
+import { Toaster, toast } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
 import Navbar from './components/Navbar';
@@ -14,6 +14,8 @@ import CarDetails from './components/CarDetails';
 import AdminPanel from './components/AdminPanel';
 import UserProfile from './components/UserProfile';
 import LoginModal from './components/LoginModal';
+import CustomerDashboard from './components/CustomerDashboard';
+import AdminDashboard from './components/AdminDashboard';
 import api from './config/axios';
 
 // Connection Status Component
@@ -82,7 +84,8 @@ function AppContent() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/car/:id" element={<CarDetails />} />
           <Route path="/profile" element={isAuthenticated ? <UserProfile /> : <Home />} />
-          <Route path="/admin" element={isAdmin ? <AdminPanel /> : <Home />} />
+          <Route path="/dashboard" element={isAuthenticated ? <CustomerDashboard /> : <Home />} />
+          <Route path="/admin" element={isAdmin ? <AdminDashboard /> : <Home />} />
         </Routes>
       </main>
       <Footer />
