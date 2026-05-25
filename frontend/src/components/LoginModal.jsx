@@ -77,13 +77,13 @@ const LoginModalContent = ({ isOpen, onClose }) => {
     if (success) {
       setShowForgotPassword(false);
       setResetEmail('');
-      toast.success('Password reset link sent to your email');
     }
     setLoading(false);
   };
 
+  // FIXED: Proper Google login handler
   const handleGoogleSuccess = async (credentialResponse) => {
-    console.log('Google login response received');
+    console.log('Google credential received:', credentialResponse);
     
     if (!credentialResponse || !credentialResponse.credential) {
       toast.error('Google login failed: No credential received');
@@ -92,10 +92,24 @@ const LoginModalContent = ({ isOpen, onClose }) => {
     
     setLoading(true);
     try {
-      const success = await googleLogin(credentialResponse);
-      if (success) {
-        toast.success('Google login successful!');
+      const response = await fetch('https://transportoperation.onrender.com/api/auth/google', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token: credentialResponse.credential })
+      });
+      
+      const data = await response.json();
+      console.log('Google auth response:', data);
+      
+      if (data.success && data.token) {
+        localStorage.setItem('token', data.token);
+        toast.success(`Welcome, ${data.user.name}!`);
+        window.location.reload(); // Reload to update auth state
         onClose();
+      } else {
+        toast.error(data.error || 'Google login failed');
       }
     } catch (error) {
       console.error('Google login error:', error);
@@ -247,7 +261,6 @@ const LoginModalContent = ({ isOpen, onClose }) => {
                 shape="rectangular"
                 theme="outline"
                 size="large"
-                width="100%"
               />
             </div>
 
