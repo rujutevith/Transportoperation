@@ -11,7 +11,6 @@ import RentCar from './components/RentCar';
 import About from './components/About';
 import Contact from './components/Contact';
 import CarDetails from './components/CarDetails';
-import AdminPanel from './components/AdminPanel';
 import UserProfile from './components/UserProfile';
 import LoginModal from './components/LoginModal';
 import CustomerDashboard from './components/CustomerDashboard';

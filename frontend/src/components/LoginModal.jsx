@@ -7,13 +7,13 @@ const LoginModal = ({ isOpen, onClose }) => {
   const { login, register } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     confirmPassword: ''
   });
-  const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
 
@@ -38,7 +38,6 @@ const LoginModal = ({ isOpen, onClose }) => {
     }
     
     setLoading(true);
-
     let success;
     if (isLogin) {
       success = await login(formData.email, formData.password);
@@ -47,12 +46,7 @@ const LoginModal = ({ isOpen, onClose }) => {
     }
     
     if (success) {
-      setFormData({
-        name: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
-      });
+      setFormData({ name: '', email: '', password: '', confirmPassword: '' });
       onClose();
     }
     setLoading(false);
@@ -163,12 +157,7 @@ const LoginModal = ({ isOpen, onClose }) => {
           <button
             onClick={() => {
               setIsLogin(!isLogin);
-              setFormData({
-                name: '',
-                email: '',
-                password: '',
-                confirmPassword: ''
-              });
+              setFormData({ name: '', email: '', password: '', confirmPassword: '' });
             }}
             className="text-gray-400 hover:text-white transition"
           >
