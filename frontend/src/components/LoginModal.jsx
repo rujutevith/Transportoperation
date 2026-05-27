@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { X, Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 
-const LoginModal = ({ isOpen, onClose }) => {
-  const { login, register } = useAuth();
+const GOOGLE_CLIENT_ID = '954770624824-vc9tci3jk9di1t1qo0tkgumei4qsu1aa.apps.googleusercontent.com';
+
+const LoginModalContent = ({ isOpen, onClose }) => {
+  const { login, register, googleLogin } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -52,11 +55,37 @@ const LoginModal = ({ isOpen, onClose }) => {
     setLoading(false);
   };
 
+  const handleGoogleSuccess = async (credentialResponse) => {
+    console.log('Google credential received');
+    
+    if (!credentialResponse || !credentialResponse.credential) {
+      toast.error('Google login failed');
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      const success = await googleLogin(credentialResponse);
+      if (success) {
+        toast.success('Google login successful!');
+        onClose();
+      }
+    } catch (error) {
+      toast.error('Google login failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleError = () => {
+    toast.error('Google login failed. Please try again or use email login.');
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="absolute inset-0 bg-black bg-opacity-75" onClick={onClose}></div>
       
-      <div className="relative bg-gray-900 rounded-xl w-full max-w-md p-8 mx-4">
+      <div className="relative bg-gray-900 rounded-xl w-full max-w-md p-8 mx-4 max-h-[90vh] overflow-y-auto">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-white transition"
@@ -73,14 +102,13 @@ const LoginModal = ({ isOpen, onClose }) => {
             <div>
               <label className="block text-gray-300 mb-2">Full Name</label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   type="text"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="input-field pl-10"
+                  className="input-field pl-4"
                   placeholder="John Doe"
                 />
               </div>
@@ -89,31 +117,27 @@ const LoginModal = ({ isOpen, onClose }) => {
 
           <div>
             <label className="block text-gray-300 mb-2">Email</label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                className="input-field pl-10"
-                placeholder="you@example.com"
-              />
-            </div>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              className="input-field"
+              placeholder="you@example.com"
+            />
           </div>
 
           <div>
             <label className="block text-gray-300 mb-2">Password</label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
                 type={showPassword ? 'text' : 'password'}
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="input-field pl-10 pr-10"
+                className="input-field pr-10"
                 placeholder="••••••••"
               />
               <button
@@ -129,18 +153,15 @@ const LoginModal = ({ isOpen, onClose }) => {
           {!isLogin && (
             <div>
               <label className="block text-gray-300 mb-2">Confirm Password</label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  required
-                  className="input-field pl-10"
-                  placeholder="••••••••"
-                />
-              </div>
+              <input
+                type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                required
+                className="input-field"
+                placeholder="••••••••"
+              />
             </div>
           )}
 
@@ -152,6 +173,30 @@ const LoginModal = ({ isOpen, onClose }) => {
             {loading ? 'Processing...' : (isLogin ? 'Sign In' : 'Sign Up')}
           </button>
         </form>
+
+        <div className="relative my-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-700"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-gray-900 text-gray-400">Or continue with</span>
+          </div>
+        </div>
+
+        {/* Google Login - Fixed with prompt=select_account */}
+        <div className="flex justify-center">
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={handleGoogleError}
+            useOneTap={false}
+            prompt="select_account"
+            text="continue_with"
+            shape="rectangular"
+            theme="outline"
+            size="large"
+            width="100%"
+          />
+        </div>
 
         <div className="mt-6 text-center">
           <button
@@ -166,6 +211,14 @@ const LoginModal = ({ isOpen, onClose }) => {
         </div>
       </div>
     </div>
+  );
+};
+
+export const LoginModal = ({ isOpen, onClose }) => {
+  return (
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+      <LoginModalContent isOpen={isOpen} onClose={onClose} />
+    </GoogleOAuthProvider>
   );
 };
 
