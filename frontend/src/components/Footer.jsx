@@ -1,21 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Car, Mail, Phone, MapPin, MessageCircle, Instagram, Facebook, Twitter, Linkedin, User } from 'lucide-react';
-import { useLanguage } from '../context/LanguageContext';
+import { Car, Mail, Phone, MapPin, MessageCircle, Instagram, Facebook, Twitter, User, Send, CheckCircle } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const Footer = () => {
-  const { t } = useLanguage();
   const currentYear = new Date().getFullYear();
+  const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
 
-  const whatsappNumber = '2507903210519';
-  const whatsappLink = `https://wa.me/${whatsappNumber}`;
-  const instagramUsername = 'zodiac45';
-  const instagramLink = `https://instagram.com/${instagramUsername}`;
-  
-  // Owner personal info
-  const ownerName = 'Thierry';
-  const ownerEmail = 'kingthierryi52@gmail.com';
-  const ownerPhone = '+250 790 321 0519';
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    if (!email) {
+      toast.error('Please enter your email address');
+      return;
+    }
+    if (!email.includes('@') || !email.includes('.')) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
+    setSubscribed(true);
+    toast.success('🎉 Subscribed successfully! You\'ll receive our latest updates.');
+    setEmail('');
+    setTimeout(() => setSubscribed(false), 5000);
+  };
 
   return (
     <footer className="bg-gray-900 border-t border-gray-800 mt-auto">
@@ -30,40 +37,19 @@ const Footer = () => {
               </span>
             </div>
             <p className="text-gray-400 mb-4">
-              Your premier destination for luxury car rentals in Kigali, Rwanda. 
-              Experience the best vehicles with exceptional service.
+              Your premier destination for luxury car rentals in Kigali, Rwanda.
             </p>
             <div className="flex space-x-3">
-              <a 
-                href={whatsappLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-green-600 hover:bg-green-700 text-white p-2 rounded-full transition duration-300"
-                aria-label="WhatsApp"
-              >
+              <a href="https://wa.me/2507903210519" target="_blank" rel="noopener noreferrer" className="bg-green-600 hover:bg-green-700 text-white p-2 rounded-full transition">
                 <MessageCircle className="w-5 h-5" />
               </a>
-              <a 
-                href={instagramLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white p-2 rounded-full transition duration-300"
-                aria-label="Instagram"
-              >
+              <a href="https://instagram.com/zodiac45" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white p-2 rounded-full transition">
                 <Instagram className="w-5 h-5" />
               </a>
-              <a 
-                href="#"
-                className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full transition duration-300"
-                aria-label="Facebook"
-              >
+              <a href="#" className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full transition">
                 <Facebook className="w-5 h-5" />
               </a>
-              <a 
-                href="#"
-                className="bg-sky-500 hover:bg-sky-600 text-white p-2 rounded-full transition duration-300"
-                aria-label="Twitter"
-              >
+              <a href="#" className="bg-sky-500 hover:bg-sky-600 text-white p-2 rounded-full transition">
                 <Twitter className="w-5 h-5" />
               </a>
             </div>
@@ -73,12 +59,10 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold text-white mb-4">Quick Links</h3>
             <ul className="space-y-2">
-              <li><Link to="/" className="text-gray-400 hover:text-white transition duration-300">Home</Link></li>
-              <li><Link to="/cars" className="text-gray-400 hover:text-white transition duration-300">Our Fleet</Link></li>
-              <li><Link to="/rent" className="text-gray-400 hover:text-white transition duration-300">Rent a Car</Link></li>
-              <li><Link to="/about" className="text-gray-400 hover:text-white transition duration-300">About Us</Link></li>
-              <li><Link to="/contact" className="text-gray-400 hover:text-white transition duration-300">Contact</Link></li>
-              <li><Link to="/profile" className="text-gray-400 hover:text-white transition duration-300">My Profile</Link></li>
+              <li><Link to="/" className="text-gray-400 hover:text-white transition">Home</Link></li>
+              <li><Link to="/cars" className="text-gray-400 hover:text-white transition">Our Fleet</Link></li>
+              <li><Link to="/dashboard" className="text-gray-400 hover:text-white transition">My Dashboard</Link></li>
+              <li><Link to="/admin" className="text-gray-400 hover:text-white transition">Admin Panel</Link></li>
             </ul>
           </div>
 
@@ -88,15 +72,11 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-center space-x-3 text-gray-400">
                 <Phone className="w-5 h-5" />
-                <span>{ownerPhone}</span>
-              </li>
-              <li className="flex items-center space-x-3 text-gray-400">
-                <MessageCircle className="w-5 h-5 text-green-500" />
-                <span>WhatsApp: {ownerPhone}</span>
+                <span>+250 790 321 0519</span>
               </li>
               <li className="flex items-center space-x-3 text-gray-400">
                 <Mail className="w-5 h-5" />
-                <span>{ownerEmail}</span>
+                <span>kingthierryi52@gmail.com</span>
               </li>
               <li className="flex items-center space-x-3 text-gray-400">
                 <MapPin className="w-5 h-5" />
@@ -105,54 +85,44 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Owner Profile */}
+          {/* Newsletter */}
           <div>
-            <h3 className="text-lg font-semibold text-white mb-4">Owner</h3>
-            <div className="bg-gray-800 rounded-lg p-4 mb-6">
-              <div className="flex items-center space-x-3 mb-3">
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-                  <User className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <p className="text-white font-semibold">{ownerName}</p>
-                  <p className="text-gray-400 text-sm">Founder & CEO</p>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <a href={`mailto:${ownerEmail}`} className="text-gray-400 hover:text-white text-sm flex items-center space-x-2">
-                  <Mail className="w-4 h-4" />
-                  <span>{ownerEmail}</span>
-                </a>
-                <a href={`tel:${ownerPhone}`} className="text-gray-400 hover:text-white text-sm flex items-center space-x-2">
-                  <Phone className="w-4 h-4" />
-                  <span>{ownerPhone}</span>
-                </a>
-                <a 
-                  href={instagramLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-pink-500 text-sm flex items-center space-x-2"
-                >
-                  <Instagram className="w-4 h-4" />
-                  <span>@{instagramUsername}</span>
-                </a>
-              </div>
-            </div>
-            
             <h3 className="text-lg font-semibold text-white mb-4">Newsletter</h3>
             <p className="text-gray-400 mb-4">
               Subscribe for exclusive offers and updates!
             </p>
-            <form className="flex flex-col space-y-3" onSubmit={(e) => e.preventDefault()}>
-              <input
-                type="email"
-                placeholder="Your email address"
-                className="input-field"
-              />
-              <button type="submit" className="btn-primary">
-                Subscribe
+            <form onSubmit={handleSubscribe} className="flex flex-col space-y-3">
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Your email address"
+                  className="input-field pl-10"
+                  required
+                />
+              </div>
+              <button 
+                type="submit" 
+                className={`btn-primary flex items-center justify-center space-x-2 transition duration-300 ${subscribed ? 'bg-green-600 hover:bg-green-700' : ''}`}
+              >
+                {subscribed ? (
+                  <>
+                    <CheckCircle className="w-4 h-4" />
+                    <span>Subscribed!</span>
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-4 h-4" />
+                    <span>Subscribe</span>
+                  </>
+                )}
               </button>
             </form>
+            <p className="text-xs text-gray-500 mt-2">
+              No spam, unsubscribe anytime.
+            </p>
           </div>
         </div>
 
@@ -160,12 +130,7 @@ const Footer = () => {
         <div className="border-t border-gray-800 mt-8 pt-8 text-center">
           <p className="text-gray-400">
             &copy; {currentYear} EliteRent Rwanda. All rights reserved. | 
-            Designed with ❤️ by {ownerName} | 
-            <a href="#" className="hover:text-white ml-2">Privacy Policy</a> | 
-            <a href="#" className="hover:text-white ml-2">Terms of Service</a>
-          </p>
-          <p className="text-gray-500 text-sm mt-2">
-            Contact: {ownerEmail} | Phone: {ownerPhone}
+            Designed with ❤️ by <span className="text-white">Thierry</span>
           </p>
         </div>
       </div>
