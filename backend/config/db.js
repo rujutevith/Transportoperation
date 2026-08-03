@@ -24,6 +24,7 @@ const dbConfig = {
   keepAliveInitialDelay: 0
 };
 
+// Add this to enable clear text plugin for TiDB
 const pool = mysql.createPool(dbConfig);
 const db = pool.promise();
 
@@ -36,7 +37,7 @@ async function testConnection() {
     const [result] = await connection.query('SELECT DATABASE() as current_db');
     console.log(`📊 Database: ${result[0].current_db}`);
     
-    // Check cars table
+    // Check if cars table exists and has data
     const [tables] = await connection.query("SHOW TABLES LIKE 'cars'");
     if (tables.length > 0) {
       const [count] = await connection.query('SELECT COUNT(*) as count FROM cars');
@@ -49,6 +50,9 @@ async function testConnection() {
   } catch (err) {
     console.error('❌ TiDB Cloud connection failed:', err.message);
     console.error('   Please check your environment variables in Render');
+    console.error('   Host:', process.env.DB_HOST);
+    console.error('   Database:', process.env.DB_NAME);
+    console.error('   User:', process.env.DB_USER);
   }
 }
 
