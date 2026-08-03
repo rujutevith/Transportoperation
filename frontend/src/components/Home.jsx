@@ -61,7 +61,7 @@ const Home = () => {
 
   const featuredCars = [
     {
-      id: 30001,
+      id: 1,
       name: "Ferrari F8 Tributo",
       price: "$850",
       image: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=500",
@@ -70,7 +70,7 @@ const Home = () => {
       specs: "V8, 710 HP"
     },
     {
-      id: 30002,
+      id: 2,
       name: "Lamborghini Huracan",
       price: "$950",
       image: "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=500",
@@ -79,7 +79,7 @@ const Home = () => {
       specs: "V10, 640 HP"
     },
     {
-      id: 30003,
+      id: 3,
       name: "Rolls Royce Ghost",
       price: "$1,600",
       image: "https://images.unsplash.com/photo-1631295868223-63228b10f8a5?w=500",
@@ -88,7 +88,7 @@ const Home = () => {
       specs: "V12, 563 HP"
     },
     {
-      id: 30004,
+      id: 4,
       name: "Porsche 911 GT3",
       price: "$780",
       image: "https://images.unsplash.com/photo-1503376780355-22e5c73c7fb3?w=500",
@@ -153,10 +153,22 @@ const Home = () => {
       <div className="bg-gradient-to-r from-gray-900 to-black border-y border-gray-800 py-6">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-            <div><p className="text-2xl font-bold text-white">500+</p><p className="text-gray-400 text-sm">Happy Customers</p></div>
-            <div><p className="text-2xl font-bold text-white">25+</p><p className="text-gray-400 text-sm">Luxury Cars</p></div>
-            <div><p className="text-2xl font-bold text-white">1000+</p><p className="text-gray-400 text-sm">Successful Rentals</p></div>
-            <div><p className="text-2xl font-bold text-white">24/7</p><p className="text-gray-400 text-sm">Support Available</p></div>
+            <div>
+              <p className="text-2xl font-bold text-white">500+</p>
+              <p className="text-gray-400 text-sm">Happy Customers</p>
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-white">25+</p>
+              <p className="text-gray-400 text-sm">Luxury Cars</p>
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-white">1000+</p>
+              <p className="text-gray-400 text-sm">Successful Rentals</p>
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-white">24/7</p>
+              <p className="text-gray-400 text-sm">Support Available</p>
+            </div>
           </div>
         </div>
       </div>
@@ -164,34 +176,34 @@ const Home = () => {
       {/* Why Choose Us */}
       <div className="py-20 px-4">
         <div className="container mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">Why Choose Us</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">Why Choose EliteRent?</h2>
           <p className="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
-            Experience the best luxury car rental service in Rwanda
+            Experience luxury, comfort, and reliability with Rwanda's premier car rental service
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center p-6 bg-gray-900 rounded-xl hover:transform hover:scale-105 transition duration-300">
-              <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="text-center p-6 bg-gray-900 rounded-xl hover:transform hover:scale-105 transition duration-300 group">
+              <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                 <Car className="w-8 h-8 text-black" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Premium Fleet</h3>
               <p className="text-gray-400">Top luxury cars from world brands</p>
             </div>
-            <div className="text-center p-6 bg-gray-900 rounded-xl hover:transform hover:scale-105 transition duration-300">
-              <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="text-center p-6 bg-gray-900 rounded-xl hover:transform hover:scale-105 transition duration-300 group">
+              <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                 <Shield className="w-8 h-8 text-black" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Full Insurance</h3>
-              <p className="text-gray-400">Complete coverage for your peace</p>
+              <p className="text-gray-400">Complete coverage for peace of mind</p>
             </div>
-            <div className="text-center p-6 bg-gray-900 rounded-xl hover:transform hover:scale-105 transition duration-300">
-              <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="text-center p-6 bg-gray-900 rounded-xl hover:transform hover:scale-105 transition duration-300 group">
+              <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                 <Clock className="w-8 h-8 text-black" />
               </div>
               <h3 className="text-xl font-semibold mb-2">24/7 Support</h3>
-              <p className="text-gray-400">Always here to help you</p>
+              <p className="text-gray-400">Always here to assist you</p>
             </div>
-            <div className="text-center p-6 bg-gray-900 rounded-xl hover:transform hover:scale-105 transition duration-300">
-              <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="text-center p-6 bg-gray-900 rounded-xl hover:transform hover:scale-105 transition duration-300 group">
+              <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                 <Award className="w-8 h-8 text-black" />
               </div>
               <h3 className="text-xl font-semibold mb-2">Best Prices</h3>
@@ -207,7 +219,7 @@ const Home = () => {
           <div className="flex justify-between items-center mb-12">
             <div>
               <h2 className="text-3xl md:text-4xl font-bold">Featured Vehicles</h2>
-              <p className="text-gray-400 mt-2">Our most exclusive cars</p>
+              <p className="text-gray-400 mt-2">Our most exclusive cars available for rent</p>
             </div>
             <Link to="/cars" className="text-white hover:text-gray-300 flex items-center gap-2">
               View All <ChevronRight className="w-4 h-4" />
@@ -233,6 +245,38 @@ const Home = () => {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Premium Services Section */}
+      <div className="py-16 px-4">
+        <div className="container mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-4">Our Premium Services</h2>
+          <p className="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
+            We offer professional chauffeur and self-drive options to suit your needs
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="bg-gray-900 rounded-xl p-8 text-center hover:transform hover:scale-105 transition duration-300">
+              <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Car className="w-8 h-8 text-black" />
+              </div>
+              <h3 className="text-2xl font-bold mb-2">Self-Drive</h3>
+              <p className="text-gray-400">
+                Drive yourself with our luxury cars. Flexible rental periods, 
+                competitive rates, and full insurance coverage.
+              </p>
+            </div>
+            <div className="bg-gray-900 rounded-xl p-8 text-center hover:transform hover:scale-105 transition duration-300">
+              <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Award className="w-8 h-8 text-black" />
+              </div>
+              <h3 className="text-2xl font-bold mb-2">Chauffeur Service</h3>
+              <p className="text-gray-400">
+                Professional, experienced drivers. Sit back and enjoy 
+                the ride while our experts handle everything.
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -269,7 +313,7 @@ const Home = () => {
         <div className="container mx-auto px-4 text-center max-w-2xl">
           <h2 className="text-3xl font-bold mb-4">Stay Connected</h2>
           <p className="text-gray-400 mb-8">
-            Subscribe to our newsletter and follow us on social media
+            Follow us on social media and subscribe to our newsletter
           </p>
           <div className="flex justify-center space-x-4 mb-8">
             <a href="#" className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full transition">
