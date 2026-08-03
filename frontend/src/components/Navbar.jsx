@@ -1,31 +1,18 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Car, Home, List, Calendar, Info, Phone, Menu, X, Globe, User, LogOut, Shield, LayoutDashboard } from 'lucide-react';
-import { useLanguage } from '../context/LanguageContext';
+import { Car, Home, List, Menu, X, User, LogOut, LayoutDashboard, Phone, Mail, MapPin } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const Navbar = ({ onLoginClick }) => {
   const location = useLocation();
-  const { t, language, changeLanguage } = useLanguage();
-  const { user, isAuthenticated, logout, isAdmin } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLangOpen, setIsLangOpen] = useState(false);
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
   const navLinks = [
-    { path: '/', name: 'home', icon: Home },
-    { path: '/cars', name: 'cars', icon: List },
-    { path: '/about', name: 'about', icon: Info },
-    { path: '/contact', name: 'contact', icon: Phone },
+    { path: '/', name: 'Home', icon: Home },
+    { path: '/cars', name: 'Cars', icon: List },
+    { path: '/contact', name: 'Contact', icon: Phone },
   ];
-
-  const languages = [
-    { code: 'en', name: 'English', flag: '🇬🇧' },
-    { code: 'fr', name: 'Français', flag: '🇫🇷' },
-    { code: 'rw', name: 'Kinyarwanda', flag: '🇷🇼' }
-  ];
-
-  const currentLanguage = languages.find(lang => lang.code === language);
 
   return (
     <nav className="bg-gray-900 border-b border-gray-800 sticky top-0 z-50">
@@ -35,7 +22,7 @@ const Navbar = ({ onLoginClick }) => {
           <Link to="/" className="flex items-center space-x-2 group">
             <Car className="w-8 h-8 text-white group-hover:scale-110 transition duration-300" />
             <span className="text-xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-              EliteRent Rwanda
+              EliteRent
             </span>
           </Link>
 
@@ -55,13 +42,13 @@ const Navbar = ({ onLoginClick }) => {
                   }`}
                 >
                   <Icon className="w-4 h-4" />
-                  <span>{t(link.name)}</span>
+                  <span>{link.name}</span>
                 </Link>
               );
             })}
             
-            {/* Dashboard Link for Authenticated Users */}
-            {isAuthenticated && !isAdmin && (
+            {/* Dashboard Link */}
+            {isAuthenticated && (
               <Link
                 to="/dashboard"
                 className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition duration-300 ${
@@ -71,113 +58,23 @@ const Navbar = ({ onLoginClick }) => {
                 }`}
               >
                 <LayoutDashboard className="w-4 h-4" />
-                <span>My Dashboard</span>
-              </Link>
-            )}
-
-            {/* Admin Panel Link for Admin Users */}
-            {isAdmin && (
-              <Link
-                to="/admin"
-                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition duration-300 ${
-                  location.pathname === '/admin'
-                    ? 'bg-white text-black'
-                    : 'text-gray-300 hover:bg-gray-800 hover:text-white'
-                }`}
-              >
-                <Shield className="w-4 h-4" />
-                <span>Admin Panel</span>
+                <span>Dashboard</span>
               </Link>
             )}
             
-            {/* Language Selector */}
-            <div className="relative ml-2">
-              <button
-                onClick={() => setIsLangOpen(!isLangOpen)}
-                className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition duration-300"
-              >
-                <Globe className="w-4 h-4" />
-                <span>{currentLanguage?.flag}</span>
-              </button>
-              
-              {isLangOpen && (
-                <>
-                  <div className="fixed inset-0 z-40" onClick={() => setIsLangOpen(false)}></div>
-                  <div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg overflow-hidden z-50">
-                    {languages.map((lang) => (
-                      <button
-                        key={lang.code}
-                        onClick={() => {
-                          changeLanguage(lang.code);
-                          setIsLangOpen(false);
-                        }}
-                        className={`w-full px-4 py-2 text-left hover:bg-gray-700 transition duration-300 flex items-center space-x-2 ${
-                          language === lang.code ? 'bg-gray-700 text-white' : 'text-gray-300'
-                        }`}
-                      >
-                        <span>{lang.flag}</span>
-                        <span>{lang.name}</span>
-                      </button>
-                    ))}
-                  </div>
-                </>
-              )}
-            </div>
-
             {/* User Menu */}
             {isAuthenticated ? (
-              <div className="relative ml-2">
+              <div className="flex items-center space-x-2 ml-2">
+                <span className="text-gray-300 text-sm hidden lg:inline">
+                  {user?.name}
+                </span>
                 <button
-                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition duration-300"
+                  onClick={logout}
+                  className="flex items-center space-x-2 px-4 py-2 rounded-lg text-red-400 hover:bg-gray-800 transition duration-300"
                 >
-                  <User className="w-4 h-4" />
-                  <span>{user?.name?.split(' ')[0]}</span>
+                  <LogOut className="w-4 h-4" />
+                  <span>Logout</span>
                 </button>
-                
-                {isUserMenuOpen && (
-                  <>
-                    <div className="fixed inset-0 z-40" onClick={() => setIsUserMenuOpen(false)}></div>
-                    <div className="absolute right-0 mt-2 w-56 bg-gray-800 rounded-lg shadow-lg overflow-hidden z-50">
-                      <Link
-                        to="/dashboard"
-                        onClick={() => setIsUserMenuOpen(false)}
-                        className="w-full px-4 py-2 text-left hover:bg-gray-700 transition duration-300 flex items-center space-x-2 text-gray-300"
-                      >
-                        <LayoutDashboard className="w-4 h-4" />
-                        <span>My Dashboard</span>
-                      </Link>
-                      <Link
-                        to="/profile"
-                        onClick={() => setIsUserMenuOpen(false)}
-                        className="w-full px-4 py-2 text-left hover:bg-gray-700 transition duration-300 flex items-center space-x-2 text-gray-300"
-                      >
-                        <User className="w-4 h-4" />
-                        <span>My Profile</span>
-                      </Link>
-                      {isAdmin && (
-                        <Link
-                          to="/admin"
-                          onClick={() => setIsUserMenuOpen(false)}
-                          className="w-full px-4 py-2 text-left hover:bg-gray-700 transition duration-300 flex items-center space-x-2 text-gray-300"
-                        >
-                          <Shield className="w-4 h-4" />
-                          <span>Admin Panel</span>
-                        </Link>
-                      )}
-                      <button
-                        onClick={() => {
-                          logout();
-                          setIsUserMenuOpen(false);
-                        }}
-                        className="w-full px-4 py-2 text-left hover:bg-gray-700 transition duration-300 flex items-center space-x-2 text-red-400"
-                      >
-                        <LogOut className="w-4 h-4" />
-                        <span>Logout</span>
-                      </button>
-                    </div>
-                  </>
-                )}
               </div>
             ) : (
               <button
@@ -191,9 +88,6 @@ const Navbar = ({ onLoginClick }) => {
 
           {/* Mobile Menu Button */}
           <div className="flex items-center space-x-4 md:hidden">
-            {isAuthenticated && (
-              <span className="text-white text-sm">{user?.name?.split(' ')[0]}</span>
-            )}
             {!isAuthenticated && (
               <button
                 onClick={onLoginClick}
@@ -229,42 +123,20 @@ const Navbar = ({ onLoginClick }) => {
                   }`}
                 >
                   <Icon className="w-5 h-5" />
-                  <span>{t(link.name)}</span>
+                  <span>{link.name}</span>
                 </Link>
               );
             })}
             
-            {isAuthenticated && !isAdmin && (
-              <Link
-                to="/dashboard"
-                onClick={() => setIsMenuOpen(false)}
-                className="flex items-center space-x-2 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800"
-              >
-                <LayoutDashboard className="w-5 h-5" />
-                <span>My Dashboard</span>
-              </Link>
-            )}
-            
-            {isAdmin && (
-              <Link
-                to="/admin"
-                onClick={() => setIsMenuOpen(false)}
-                className="flex items-center space-x-2 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800"
-              >
-                <Shield className="w-5 h-5" />
-                <span>Admin Panel</span>
-              </Link>
-            )}
-            
             {isAuthenticated && (
               <>
                 <Link
-                  to="/profile"
+                  to="/dashboard"
                   onClick={() => setIsMenuOpen(false)}
                   className="flex items-center space-x-2 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800"
                 >
-                  <User className="w-5 h-5" />
-                  <span>My Profile</span>
+                  <LayoutDashboard className="w-5 h-5" />
+                  <span>Dashboard</span>
                 </Link>
                 <button
                   onClick={() => {
@@ -279,25 +151,11 @@ const Navbar = ({ onLoginClick }) => {
               </>
             )}
             
-            {/* Mobile Language Selector */}
+            {/* Mobile Contact Info */}
             <div className="px-4 py-3 border-t border-gray-800 mt-2">
-              <p className="text-gray-400 mb-2">Language</p>
-              <div className="flex space-x-2">
-                {languages.map((lang) => (
-                  <button
-                    key={lang.code}
-                    onClick={() => {
-                      changeLanguage(lang.code);
-                      setIsMenuOpen(false);
-                    }}
-                    className={`px-3 py-1 rounded-lg ${
-                      language === lang.code ? 'bg-white text-black' : 'bg-gray-800 text-gray-300'
-                    }`}
-                  >
-                    {lang.flag} {lang.name}
-                  </button>
-                ))}
-              </div>
+              <p className="text-gray-400 text-sm">📞 0790068051</p>
+              <p className="text-gray-500 text-xs">📧 isingizwekingthierry@gmail.com</p>
+              <p className="text-gray-500 text-xs">📍 Bugesera, Nyamata</p>
             </div>
           </div>
         )}

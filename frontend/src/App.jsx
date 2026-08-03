@@ -1,74 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Toaster, toast } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import { LanguageProvider } from './context/LanguageContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './components/Home';
 import Cars from './components/Cars';
-import RentCar from './components/RentCar';
-import About from './components/About';
-import Contact from './components/Contact';
 import CarDetails from './components/CarDetails';
-import UserProfile from './components/UserProfile';
 import LoginModal from './components/LoginModal';
 import CustomerDashboard from './components/CustomerDashboard';
-import AdminDashboard from './components/AdminDashboard';
-import api from './config/axios';
-
-// Connection Status Component
-const ConnectionStatus = () => {
-  const [status, setStatus] = useState('checking');
-  const [message, setMessage] = useState('');
-
-  useEffect(() => {
-    const checkConnection = async () => {
-      try {
-        const API_URL = import.meta.env.VITE_API_URL || 'https://transportoperation.onrender.com';
-        const response = await fetch(`${API_URL}/health`);
-        
-        if (response.ok) {
-          setStatus('connected');
-          setMessage('✅ Backend connected successfully');
-        } else {
-          setStatus('error');
-          setMessage('⚠️ Backend responded but status unhealthy');
-        }
-      } catch (error) {
-        setStatus('error');
-        setMessage('❌ Cannot connect to backend');
-        console.error('Backend connection error:', error);
-      }
-    };
-    checkConnection();
-  }, []);
-
-  if (status === 'checking') {
-    return (
-      <div className="fixed bottom-4 right-4 bg-gray-800 text-white px-4 py-2 rounded-lg shadow-lg z-50 text-sm">
-        🔄 Connecting to backend...
-      </div>
-    );
-  }
-
-  if (status === 'error') {
-    return (
-      <div className="fixed bottom-4 right-4 bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg z-50 text-sm">
-        {message}
-      </div>
-    );
-  }
-
-  return (
-    <div className="fixed bottom-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg z-50 text-sm">
-      {message}
-    </div>
-  );
-};
+import Contact from './components/Contact';
 
 function AppContent() {
-  const { isAuthenticated, isAdmin } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [showLoginModal, setShowLoginModal] = useState(false);
 
   return (
@@ -78,18 +22,13 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/cars" element={<Cars />} />
-          <Route path="/rent" element={<RentCar />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
           <Route path="/car/:id" element={<CarDetails />} />
-          <Route path="/profile" element={isAuthenticated ? <UserProfile /> : <Home />} />
           <Route path="/dashboard" element={isAuthenticated ? <CustomerDashboard /> : <Home />} />
-          <Route path="/admin" element={isAdmin ? <AdminDashboard /> : <Home />} />
+          <Route path="/contact" element={<Contact />} />
         </Routes>
       </main>
       <Footer />
       <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
-      <ConnectionStatus />
       <Toaster 
         position="top-right"
         toastOptions={{
@@ -107,11 +46,9 @@ function AppContent() {
 function App() {
   return (
     <Router>
-      <LanguageProvider>
-        <AuthProvider>
-          <AppContent />
-        </AuthProvider>
-      </LanguageProvider>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
     </Router>
   );
 }
