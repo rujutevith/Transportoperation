@@ -34,7 +34,6 @@ const YoutubeIcon = () => (
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   
-  // HERO SLIDES
   const heroSlides = [
     {
       image: "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=1200&q=80",
@@ -65,18 +64,18 @@ const Home = () => {
       badge: "👑 Luxury Sedan"
     },
     {
-      image: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&q=80",
-      title: "Luxury SUVs",
-      subtitle: "Power & Comfort",
-      description: "Perfect blend of performance and elegance in our premium SUVs",
-      badge: "🚙 Premium SUVs"
+      image: "https://images.unsplash.com/photo-1606016151427-5d77f8efb3cc?w=1200&q=80",
+      title: "Toyota Land Cruiser",
+      subtitle: "The King of African Roads",
+      description: "Experience the legendary Toyota Land Cruiser V8 - the most trusted SUV in Rwanda",
+      badge: "👑 King of the Road"
     },
     {
-      image: "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=1200&q=80",
-      title: "Chauffeur Service",
-      subtitle: "Professional & Discreet",
-      description: "Sit back and relax while our expert drivers take you anywhere in luxury",
-      badge: "👔 VIP Service"
+      image: "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=1200&q=80",
+      title: "Kia Sportage",
+      subtitle: "Reliable & Affordable",
+      description: "The most trusted SUV in Rwanda - Kia Sportage",
+      badge: "🇷🇼 Rwanda Favorite"
     }
   ];
 
@@ -99,10 +98,11 @@ const Home = () => {
     setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
   };
 
-  // FEATURED CARS - 8 UNIQUE CARS (REMOVED Porsche 911 GT3 and Bentley)
+  // ========== 12 CARS: 8 Luxury + 4 Rwanda Popular (ALL UNIQUE IMAGES) ==========
   const featuredCars = [
+    // -------- 8 Luxury Cars --------
     {
-      id: 1,
+      id: 30001,
       name: "Ferrari F8 Tributo",
       price: "$850",
       image: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=500&q=80",
@@ -111,7 +111,7 @@ const Home = () => {
       specs: "V8, 710 HP"
     },
     {
-      id: 2,
+      id: 30002,
       name: "Lamborghini Huracan",
       price: "$950",
       image: "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=500&q=80",
@@ -120,7 +120,7 @@ const Home = () => {
       specs: "V10, 640 HP"
     },
     {
-      id: 3,
+      id: 30003,
       name: "Rolls Royce Ghost",
       price: "$1,600",
       image: "https://images.unsplash.com/photo-1631295868223-63228b10f8a5?w=500&q=80",
@@ -129,7 +129,7 @@ const Home = () => {
       specs: "V12, 563 HP"
     },
     {
-      id: 4,
+      id: 30004,
       name: "McLaren 720S",
       price: "$1,650",
       image: "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=500&q=80",
@@ -138,7 +138,7 @@ const Home = () => {
       specs: "V8, 710 HP"
     },
     {
-      id: 5,
+      id: 30005,
       name: "Mercedes AMG GT",
       price: "$750",
       image: "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=500&q=80",
@@ -147,7 +147,7 @@ const Home = () => {
       specs: "V8, 630 HP"
     },
     {
-      id: 6,
+      id: 30006,
       name: "Aston Martin DBS",
       price: "$1,800",
       image: "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=500&q=80",
@@ -156,7 +156,7 @@ const Home = () => {
       specs: "V12, 715 HP"
     },
     {
-      id: 7,
+      id: 30007,
       name: "Audi R8",
       price: "$720",
       image: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=500&q=80",
@@ -165,13 +165,51 @@ const Home = () => {
       specs: "V10, 602 HP"
     },
     {
-      id: 8,
+      id: 30008,
       name: "BMW M8 Competition",
       price: "$680",
       image: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=500&q=80",
       rating: 4.7,
       type: "Luxury Coupe",
       specs: "V8, 617 HP"
+    },
+
+    // -------- 4 Rwanda Popular Cars (ALL UNIQUE IMAGES) --------
+    {
+      id: 30009,
+      name: "Toyota Land Cruiser V8",
+      price: "$120",
+      image: "https://images.unsplash.com/photo-1606016151427-5d77f8efb3cc?w=500&q=80",
+      rating: 4.9,
+      type: "SUV",
+      specs: "V8 Diesel, 4.5L"
+    },
+    {
+      id: 30010,
+      name: "Toyota Hilux Vigo",
+      price: "$70",
+      image: "https://images.unsplash.com/photo-1549317661-bc2d8e8f4d9e?w=500&q=80",
+      rating: 4.8,
+      type: "Pickup",
+      specs: "Diesel, 3.0L"
+    },
+    {
+      id: 30011,
+      name: "Kia Sportage",
+      price: "$40",
+      image: "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=500&q=80",
+      rating: 4.7,
+      type: "SUV",
+      specs: "Petrol, 2.0L"
+    },
+    {
+      id: 30012,
+      name: "Nissan Patrol",
+      price: "$130",
+      image: "https://images.unsplash.com/photo-1594502184342-7e12f877aa5f?w=500&q=80",
+      rating: 4.9,
+      type: "SUV",
+      specs: "V8 Diesel, 5.6L"
     }
   ];
 
@@ -268,8 +306,8 @@ const Home = () => {
               <p className="text-gray-400 text-sm">Happy Customers</p>
             </div>
             <div className="animate-pulse delay-100">
-              <p className="text-2xl font-bold text-white">25+</p>
-              <p className="text-gray-400 text-sm">Luxury Cars</p>
+              <p className="text-2xl font-bold text-white">50+</p>
+              <p className="text-gray-400 text-sm">Cars Available</p>
             </div>
             <div className="animate-pulse delay-200">
               <p className="text-2xl font-bold text-white">1000+</p>
@@ -295,8 +333,8 @@ const Home = () => {
               <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
                 <Car className="w-8 h-8 text-black" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Premium Fleet</h3>
-              <p className="text-gray-400">Top luxury cars from world brands</p>
+              <h3 className="text-xl font-semibold mb-2">Diverse Fleet</h3>
+              <p className="text-gray-400">From luxury to affordable Rwandan favorites</p>
             </div>
             <div className="text-center p-6 bg-gray-900 rounded-xl hover:transform hover:scale-105 transition duration-300 group">
               <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
@@ -323,13 +361,13 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Featured Cars - 8 Unique Cars */}
+      {/* Featured Cars - 12 Cars (8 Luxury + 4 Rwanda Popular) */}
       <div className="py-20 bg-gray-900/50">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center mb-12">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold">Featured Vehicles</h2>
-              <p className="text-gray-400 mt-2">Our most exclusive cars available for rent</p>
+              <h2 className="text-3xl md:text-4xl font-bold">Our Fleet</h2>
+              <p className="text-gray-400 mt-2">Luxury cars and Rwandan favorites</p>
             </div>
             <Link to="/cars" className="text-white hover:text-gray-300 flex items-center gap-2">
               View All <ChevronRight className="w-4 h-4" />
@@ -356,7 +394,7 @@ const Home = () => {
                   <h3 className="text-xl font-semibold">{car.name}</h3>
                   <p className="text-gray-400 text-sm">{car.type}</p>
                   <p className="text-xs text-gray-500 mt-1">{car.specs}</p>
-                  <p className="text-2xl font-bold text-white mt-3">{car.price}<span className="text-sm text-gray-400">/day</span></p>
+                  <p className="text-2xl font-bold text-white mt-3">${car.price}<span className="text-sm text-gray-400">/day</span></p>
                   <Link to={`/car/${car.id}`} className="btn-secondary w-full text-center inline-block mt-4 group-hover:bg-white group-hover:text-black transition duration-300">
                     View Details
                   </Link>
