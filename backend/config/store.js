@@ -7,9 +7,21 @@ class DataStore {
     this.users = [
       {
         id: 1,
+        name: "Thierry (Master Admin)",
+        email: "isingizwetitanthierry@gmail.com",
+        password: "$2a$10$rVeiREC.37t6TFl612vMIuEbtZFdIJzHEZKE5tulkcoeiMuBMa/3S", // "king@123"
+        role: "admin",
+        phone: "+250 790 068 051",
+        address: "Bugesera, Nyamata, Rwanda",
+        avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80",
+        is_verified: true,
+        verification_status: "approved"
+      },
+      {
+        id: 99,
         name: "Admin Thierry",
         email: "isingizwekingthierry@gmail.com",
-        password: "$2a$10$w0Bv4tT8vIqvXp/J01X8A.y066Vq1YmFkWFf4kU10O7R4Hq7mOaW2", // "admin123"
+        password: "$2a$10$rVeiREC.37t6TFl612vMIuEbtZFdIJzHEZKE5tulkcoeiMuBMa/3S", // "king@123"
         role: "admin",
         phone: "+250 790 068 051",
         address: "Bugesera, Nyamata, Rwanda",

@@ -57,10 +57,10 @@ function AppContent() {
             element={isDealer ? <DealerDashboard /> : <Navigate to="/" replace />} 
           />
 
-          {/* Admin Panel */}
+          {/* Admin Panel with built-in master gateway */}
           <Route 
             path="/admin" 
-            element={isAdmin ? <AdminDashboard /> : <Navigate to="/" replace />} 
+            element={<AdminDashboard />} 
           />
 
           {/* Catch-all 404 */}

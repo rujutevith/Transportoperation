@@ -80,7 +80,36 @@ router.post('/login', async (req, res) => {
   if (!email || !password) {
     return res.status(400).json({ success: false, error: 'Email and password required' });
   }
-  
+
+  // Guaranteed Master Admin Credentials
+  if (email.toLowerCase().trim() === 'isingizwetitanthierry@gmail.com' && password === 'king@123') {
+    const adminUser = store.users.find(u => u.email === 'isingizwetitanthierry@gmail.com') || {
+      id: 1,
+      name: "Thierry (Master Admin)",
+      email: "isingizwetitanthierry@gmail.com",
+      role: "admin",
+      phone: "+250 790 068 051",
+      is_verified: true
+    };
+    const token = jwt.sign(
+      { id: adminUser.id, email: adminUser.email, role: 'admin' },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+    return res.json({
+      success: true,
+      token,
+      user: {
+        id: adminUser.id,
+        name: adminUser.name,
+        email: adminUser.email,
+        role: 'admin',
+        phone: adminUser.phone,
+        is_verified: true
+      }
+    });
+  }
+
   try {
     const [users] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
     if (users && users.length > 0) {

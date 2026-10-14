@@ -94,6 +94,7 @@ const Footer = () => {
               <li><Link to="/terms" className="hover:text-amber-400 transition">Terms of Service</Link></li>
               <li><Link to="/rental-agreement" className="hover:text-amber-400 transition">Rental & Insurance Policy</Link></li>
               <li><Link to="/privacy" className="hover:text-amber-400 transition">Privacy Policy (GDPR)</Link></li>
+              <li><Link to="/admin" className="hover:text-amber-400 text-amber-400/80 transition">🔒 Master Admin Portal</Link></li>
               <li className="pt-2 text-gray-500 text-[11px] leading-relaxed">
                 All vehicle rental handovers require completed in-app driver's verification under Rwandan road safety laws.
               </li>

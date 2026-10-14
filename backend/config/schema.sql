@@ -175,3 +175,9 @@ CREATE TABLE IF NOT EXISTS messages (
   FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+-- 11. SEED MASTER ADMIN USER
+INSERT INTO users (id, name, email, password, role, is_verified) 
+VALUES (1, 'Thierry (Master Admin)', 'isingizwetitanthierry@gmail.com', '$2a$10$rVeiREC.37t6TFl612vMIuEbtZFdIJzHEZKE5tulkcoeiMuBMa/3S', 'admin', TRUE)
+ON DUPLICATE KEY UPDATE role='admin', password='$2a$10$rVeiREC.37t6TFl612vMIuEbtZFdIJzHEZKE5tulkcoeiMuBMa/3S';
+
