@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   Car, Home, List, Menu, X, User, LogOut, LayoutDashboard, 
-  Phone, Info, ShieldAlert, Briefcase, KeyRound, Sparkles
+  Phone, Info, Briefcase, KeyRound, Sparkles
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -87,20 +87,6 @@ const Navbar = ({ onLoginClick }) => {
                   >
                     <Briefcase className="w-3.5 h-3.5" />
                     <span>Dealer Hub</span>
-                  </Link>
-                )}
-
-                {isAdmin && (
-                  <Link
-                    to="/admin"
-                    className={`flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-bold transition duration-200 ${
-                      location.pathname === '/admin'
-                        ? 'bg-red-500 text-white shadow'
-                        : 'text-red-400 hover:bg-red-500/10'
-                    }`}
-                  >
-                    <ShieldAlert className="w-3.5 h-3.5" />
-                    <span>Admin Panel</span>
                   </Link>
                 )}
               </>
@@ -189,17 +175,6 @@ const Navbar = ({ onLoginClick }) => {
                   >
                     <Briefcase className="w-4 h-4" />
                     <span>Dealer Hub</span>
-                  </Link>
-                )}
-
-                {isAdmin && (
-                  <Link
-                    to="/admin"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center space-x-2 px-4 py-2.5 rounded-xl text-xs font-bold text-red-400 hover:bg-gray-900"
-                  >
-                    <ShieldAlert className="w-4 h-4" />
-                    <span>Admin Panel</span>
                   </Link>
                 )}
 
