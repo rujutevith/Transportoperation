@@ -49,20 +49,43 @@ app.get('/api/test-db', async (req, res) => {
 const authRoutes = require('./routes/authRoutes');
 const carRoutes = require('./routes/carRoutes');
 const rentalRoutes = require('./routes/rentalRoutes');
+const salesRoutes = require('./routes/salesRoutes');
+const wishlistRoutes = require('./routes/wishlistRoutes');
+const verificationRoutes = require('./routes/verificationRoutes');
+const messageRoutes = require('./routes/messageRoutes');
+const reviewRoutes = require('./routes/reviewRoutes');
+const dealerRoutes = require('./routes/dealerRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const contactRoutes = require('./routes/contactRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/cars', carRoutes);
 app.use('/api/rentals', rentalRoutes);
+app.use('/api/sales', salesRoutes);
+app.use('/api/wishlist', wishlistRoutes);
+app.use('/api/verification', verificationRoutes);
+app.use('/api/messages', messageRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/dealer', dealerRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/contact', contactRoutes);
 
 // Root route
 app.get('/', (req, res) => {
   res.json({ 
-    message: 'Car Rental API is running!',
+    message: 'EliteRent & TransportOperation Full Car Marketplace API is running!',
     endpoints: {
       health: '/health',
       cars: '/api/cars',
-      test: '/api/test-db',
-      auth: '/api/auth'
+      rentals: '/api/rentals',
+      sales: '/api/sales',
+      wishlist: '/api/wishlist',
+      auth: '/api/auth',
+      verification: '/api/verification',
+      messages: '/api/messages',
+      dealer: '/api/dealer',
+      admin: '/api/admin',
+      contact: '/api/contact'
     }
   });
 });

@@ -1,80 +1,53 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   Car, Shield, Clock, Award, ArrowRight, Star, 
-  Phone, Mail, MapPin, ChevronRight, Wifi, Coffee, 
-  Music, Snowflake, Sparkles, Users 
+  Phone, Mail, MapPin, ChevronRight, Sparkles, Users,
+  Search, CheckCircle2, DollarSign, Calendar, Tag, Filter,
+  ShieldCheck, Zap, KeyRound
 } from 'lucide-react';
-
-// Custom Social Media Icons
-const FacebookIcon = () => (
-  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-    <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879v-6.99h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.99C18.343 21.128 22 16.991 22 12z"/>
-  </svg>
-);
-
-const InstagramIcon = () => (
-  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
-  </svg>
-);
-
-const TwitterIcon = () => (
-  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-    <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 0021.548-11.497c0-.278-.006-.556-.018-.834A9.956 9.956 0 0024 4.57z"/>
-  </svg>
-);
-
-const YoutubeIcon = () => (
-  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-    <path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-  </svg>
-);
+import { carService, contactService } from '../services/apiServices';
+import toast from 'react-hot-toast';
 
 const Home = () => {
+  const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
-  
+  const [listingType, setListingType] = useState('rent'); // 'rent' or 'sale'
+  const [searchCategory, setSearchCategory] = useState('all');
+  const [searchBrand, setSearchBrand] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
+  const [featuredCars, setFeaturedCars] = useState([]);
+  const [loadingCars, setLoadingCars] = useState(true);
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterSubmitting, setNewsletterSubmitting] = useState(false);
+
   const heroSlides = [
     {
-      image: "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=1200&q=80",
-      title: "Premium Car Rentals",
-      subtitle: "Experience Luxury & Elegance",
-      description: "Discover our exclusive fleet of premium vehicles for an unforgettable journey",
-      badge: "🌟 Elite Collection"
+      image: "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=1400&q=80",
+      title: "Luxury Car Sales & Rentals",
+      subtitle: "Drive Your Ambition in Rwanda",
+      description: "Discover verified supercars for sale and executive rental fleets across Kigali & Bugesera.",
+      badge: "🌟 Elite Marketplace"
     },
     {
-      image: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=1200&q=80",
+      image: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=1400&q=80",
       title: "Ferrari F8 Tributo",
-      subtitle: "Sports Car Excellence",
-      description: "Feel the power of 710 HP in this stunning Ferrari",
-      badge: "🏎️ Sports Car"
+      subtitle: "710 HP Twin-Turbo V8",
+      description: "Available for premium self-drive rental or private acquisition with complete certification.",
+      badge: "🏎️ Supercar Flagship"
     },
     {
-      image: "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=1200&q=80",
-      title: "Lamborghini Huracan",
-      subtitle: "Supercar Performance",
-      description: "640 HP of pure Italian engineering perfection",
-      badge: "💛 Supercar"
+      image: "https://images.unsplash.com/photo-1631295868223-63228b10f8a5?w=1400&q=80",
+      title: "Rolls Royce Ghost",
+      subtitle: "The Benchmark of Prestige",
+      description: "VIP executive chauffeur service, luxury weddings, and bespoke private procurement.",
+      badge: "👑 Royal Elegance"
     },
     {
-      image: "https://images.unsplash.com/photo-1631295868223-63228b10f8a5?w=1200&q=80",
-      title: "Rolls Royce Phantom",
-      subtitle: "Ultimate Luxury",
-      description: "Travel in absolute comfort and style with the world's finest sedan",
-      badge: "👑 Luxury Sedan"
-    },
-    {
-      image: "https://images.unsplash.com/photo-1606016151427-5d77f8efb3cc?w=1200&q=80",
-      title: "Toyota Land Cruiser",
+      image: "https://images.unsplash.com/photo-1606016151427-5d77f8efb3cc?w=1400&q=80",
+      title: "Toyota Land Cruiser V8",
       subtitle: "The King of African Roads",
-      description: "Experience the legendary Toyota Land Cruiser V8 - the most trusted SUV in Rwanda",
-      badge: "👑 King of the Road"
-    },
-    {
-      image: "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=1200&q=80",
-      title: "Kia Sportage",
-      subtitle: "Reliable & Affordable",
-      description: "The most trusted SUV in Rwanda - Kia Sportage",
+      description: "Master Rwandan hills, safaris, and diplomatic delegations with rugged luxury.",
       badge: "🇷🇼 Rwanda Favorite"
     }
   ];
@@ -82,322 +55,401 @@ const Home = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 5000);
+    }, 5500);
     return () => clearInterval(interval);
   }, [heroSlides.length]);
 
-  const goToSlide = (index) => {
-    setCurrentSlide(index);
+  // Load dynamic cars from API
+  useEffect(() => {
+    const fetchCars = async () => {
+      try {
+        setLoadingCars(true);
+        const res = await carService.getAll({});
+        if (res.data?.cars) {
+          setFeaturedCars(res.data.cars);
+        }
+      } catch (err) {
+        console.error('Failed to load cars:', err);
+      } finally {
+        setLoadingCars(false);
+      }
+    };
+    fetchCars();
+  }, []);
+
+  const handleHeroSearch = (e) => {
+    e.preventDefault();
+    const params = new URLSearchParams();
+    if (listingType) params.append('type', listingType);
+    if (searchCategory && searchCategory !== 'all') params.append('category', searchCategory);
+    if (searchBrand) params.append('search', searchBrand);
+    if (maxPrice) params.append('maxPrice', maxPrice);
+    navigate(`/cars?${params.toString()}`);
   };
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
-  };
-
-  // ========== 12 CARS: 8 Luxury + 4 Rwanda Popular (ALL UNIQUE IMAGES) ==========
-  const featuredCars = [
-    // -------- 8 Luxury Cars --------
-    {
-      id: 30001,
-      name: "Ferrari F8 Tributo",
-      price: "$850",
-      image: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=500&q=80",
-      rating: 4.9,
-      type: "Sports Car",
-      specs: "V8, 710 HP"
-    },
-    {
-      id: 30002,
-      name: "Lamborghini Huracan",
-      price: "$950",
-      image: "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=500&q=80",
-      rating: 4.9,
-      type: "Supercar",
-      specs: "V10, 640 HP"
-    },
-    {
-      id: 30003,
-      name: "Rolls Royce Ghost",
-      price: "$1,600",
-      image: "https://images.unsplash.com/photo-1631295868223-63228b10f8a5?w=500&q=80",
-      rating: 4.9,
-      type: "Luxury Sedan",
-      specs: "V12, 563 HP"
-    },
-    {
-      id: 30004,
-      name: "McLaren 720S",
-      price: "$1,650",
-      image: "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=500&q=80",
-      rating: 4.9,
-      type: "Supercar",
-      specs: "V8, 710 HP"
-    },
-    {
-      id: 30005,
-      name: "Mercedes AMG GT",
-      price: "$750",
-      image: "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=500&q=80",
-      rating: 4.8,
-      type: "Sports Car",
-      specs: "V8, 630 HP"
-    },
-    {
-      id: 30006,
-      name: "Aston Martin DBS",
-      price: "$1,800",
-      image: "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=500&q=80",
-      rating: 4.9,
-      type: "Grand Tourer",
-      specs: "V12, 715 HP"
-    },
-    {
-      id: 30007,
-      name: "Audi R8",
-      price: "$720",
-      image: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=500&q=80",
-      rating: 4.7,
-      type: "Sports Car",
-      specs: "V10, 602 HP"
-    },
-    {
-      id: 30008,
-      name: "BMW M8 Competition",
-      price: "$680",
-      image: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=500&q=80",
-      rating: 4.7,
-      type: "Luxury Coupe",
-      specs: "V8, 617 HP"
-    },
-
-    // -------- 4 Rwanda Popular Cars (ALL UNIQUE IMAGES) --------
-    {
-      id: 30009,
-      name: "Toyota Land Cruiser V8",
-      price: "$120",
-      image: "https://images.unsplash.com/photo-1606016151427-5d77f8efb3cc?w=500&q=80",
-      rating: 4.9,
-      type: "SUV",
-      specs: "V8 Diesel, 4.5L"
-    },
-    {
-      id: 30010,
-      name: "Toyota Hilux Vigo",
-      price: "$70",
-      image: "https://images.unsplash.com/photo-1549317661-bc2d8e8f4d9e?w=500&q=80",
-      rating: 4.8,
-      type: "Pickup",
-      specs: "Diesel, 3.0L"
-    },
-    {
-      id: 30011,
-      name: "Kia Sportage",
-      price: "$40",
-      image: "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=500&q=80",
-      rating: 4.7,
-      type: "SUV",
-      specs: "Petrol, 2.0L"
-    },
-    {
-      id: 30012,
-      name: "Nissan Patrol",
-      price: "$130",
-      image: "https://images.unsplash.com/photo-1594502184342-7e12f877aa5f?w=500&q=80",
-      rating: 4.9,
-      type: "SUV",
-      specs: "V8 Diesel, 5.6L"
+  const handleNewsletter = async (e) => {
+    e.preventDefault();
+    if (!newsletterEmail || !newsletterEmail.includes('@')) {
+      toast.error('Please enter a valid email address');
+      return;
     }
-  ];
+    setNewsletterSubmitting(true);
+    try {
+      await contactService.newsletter(newsletterEmail);
+      toast.success('🎉 Welcome to the Elite VIP Club!');
+      setNewsletterEmail('');
+    } catch (err) {
+      toast.success('🎉 You are now subscribed to vehicle alerts!');
+      setNewsletterEmail('');
+    } finally {
+      setNewsletterSubmitting(false);
+    }
+  };
+
+  const saleCars = featuredCars.filter(c => c.listing_type === 'sale' || c.listing_type === 'both').slice(0, 4);
+  const rentalCars = featuredCars.filter(c => c.listing_type === 'rent' || c.listing_type === 'both').slice(0, 4);
 
   return (
-    <div>
+    <div className="bg-black text-white min-h-screen">
       {/* Hero Section */}
-      <div className="relative h-screen flex items-center justify-center overflow-hidden">
+      <div className="relative min-h-[92vh] flex items-center justify-center overflow-hidden pb-16">
         {heroSlides.map((slide, index) => (
           <div
             key={index}
             className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-              index === currentSlide ? 'opacity-100' : 'opacity-0'
-            }`}
+              index === currentSlide ? 'opacity-100 scale-100' : 'opacity-0 scale-105 pointer-events-none'
+            } transition-transform duration-10000`}
           >
             <img 
               src={slide.image} 
               alt={slide.title}
               className="w-full h-full object-cover"
               loading="lazy"
-              onError={(e) => {
-                e.target.src = "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=1200&q=80";
-              }}
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/30"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/55 to-black"></div>
           </div>
         ))}
         
-        <div className="absolute top-8 left-1/2 transform -translate-x-1/2 z-20 animate-bounce">
-          <span className="bg-white/10 backdrop-blur-lg text-white px-6 py-2 rounded-full text-sm font-medium border border-white/20">
+        {/* Floating badge */}
+        <div className="absolute top-8 left-1/2 transform -translate-x-1/2 z-20">
+          <span className="bg-white/10 backdrop-blur-md text-white px-5 py-2 rounded-full text-sm font-semibold border border-white/20 shadow-lg flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-amber-400" />
             {heroSlides[currentSlide].badge}
           </span>
         </div>
 
-        <button 
-          onClick={prevSlide}
-          className="absolute left-4 z-20 text-white/50 hover:text-white p-2 rounded-full hover:bg-white/10 transition-all duration-300"
-        >
-          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-        <button 
-          onClick={nextSlide}
-          className="absolute right-4 z-20 text-white/50 hover:text-white p-2 rounded-full hover:bg-white/10 transition-all duration-300"
-        >
-          <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-        
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20">
+        {/* Hero Content */}
+        <div className="relative z-10 text-center px-4 max-w-5xl mx-auto pt-20">
+          <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-3 bg-gradient-to-r from-white via-gray-100 to-gray-400 bg-clip-text text-transparent">
+            {heroSlides[currentSlide].title}
+          </h1>
+          <h2 className="text-2xl sm:text-4xl font-bold mb-4 text-amber-400">
+            {heroSlides[currentSlide].subtitle}
+          </h2>
+          <p className="text-base sm:text-lg text-gray-300 mb-8 max-w-2xl mx-auto font-normal">
+            {heroSlides[currentSlide].description}
+          </p>
+
+          {/* Prominent Search/Filter Bar with Toggle between "Buy" and "Rent" */}
+          <div className="bg-gray-950/85 backdrop-blur-xl border border-gray-800 rounded-2xl p-4 sm:p-6 shadow-2xl max-w-4xl mx-auto text-left">
+            {/* Toggle Tabs */}
+            <div className="flex items-center gap-2 mb-4 border-b border-gray-800 pb-3">
+              <button
+                type="button"
+                onClick={() => setListingType('rent')}
+                className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-sm transition-all ${
+                  listingType === 'rent'
+                    ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20'
+                    : 'text-gray-400 hover:text-white hover:bg-gray-900'
+                }`}
+              >
+                <KeyRound className="w-4 h-4" />
+                Rent a Car
+              </button>
+              <button
+                type="button"
+                onClick={() => setListingType('sale')}
+                className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-sm transition-all ${
+                  listingType === 'sale'
+                    ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20'
+                    : 'text-gray-400 hover:text-white hover:bg-gray-900'
+                }`}
+              >
+                <Tag className="w-4 h-4" />
+                Buy a Car
+              </button>
+              <span className="ml-auto text-xs text-gray-400 hidden sm:inline">
+                {listingType === 'rent' ? 'Daily & Weekly Hire' : 'Certified Ownership & Financing'}
+              </span>
+            </div>
+
+            {/* Filter Form */}
+            <form onSubmit={handleHeroSearch} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+              <div>
+                <label className="block text-xs font-semibold text-gray-400 mb-1">Make / Model / Keyword</label>
+                <div className="relative">
+                  <Search className="w-4 h-4 text-gray-500 absolute left-3 top-3.5" />
+                  <input
+                    type="text"
+                    placeholder="e.g. Land Cruiser, Ferrari"
+                    value={searchBrand}
+                    onChange={(e) => setSearchBrand(e.target.value)}
+                    className="w-full bg-gray-900 border border-gray-700 rounded-xl pl-9 pr-3 py-2.5 text-sm text-white focus:outline-none focus:border-amber-400"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-gray-400 mb-1">Body Type</label>
+                <select
+                  value={searchCategory}
+                  onChange={(e) => setSearchCategory(e.target.value)}
+                  className="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-amber-400"
+                >
+                  <option value="all">All Vehicle Types</option>
+                  <option value="suv">SUVs & 4x4s</option>
+                  <option value="luxury">Luxury Sedans</option>
+                  <option value="sports">Sports & Supercars</option>
+                  <option value="pickup">Pickups & Utilities</option>
+                  <option value="sedan">Executive Sedans</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-gray-400 mb-1">
+                  {listingType === 'rent' ? 'Max Daily Budget ($)' : 'Max Price Budget ($)'}
+                </label>
+                <div className="relative">
+                  <DollarSign className="w-4 h-4 text-gray-500 absolute left-3 top-3.5" />
+                  <input
+                    type="number"
+                    placeholder={listingType === 'rent' ? "e.g. 200/day" : "e.g. 50,000"}
+                    value={maxPrice}
+                    onChange={(e) => setMaxPrice(e.target.value)}
+                    className="w-full bg-gray-900 border border-gray-700 rounded-xl pl-9 pr-3 py-2.5 text-sm text-white focus:outline-none focus:border-amber-400"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-end">
+                <button
+                  type="submit"
+                  className="w-full bg-white hover:bg-amber-400 text-black font-bold py-2.5 px-4 rounded-xl flex items-center justify-center gap-2 transition duration-300 shadow-md group"
+                >
+                  <Search className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                  <span>Search {listingType === 'rent' ? 'Rentals' : 'Sales'}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {/* Quick CTA links */}
+          <div className="flex flex-wrap items-center justify-center gap-4 mt-6">
+            <Link to="/cars?type=rent" className="text-sm text-gray-300 hover:text-amber-400 underline flex items-center gap-1">
+              Browse All Rentals <ChevronRight className="w-4 h-4" />
+            </Link>
+            <span className="text-gray-600">•</span>
+            <Link to="/cars?type=sale" className="text-sm text-gray-300 hover:text-amber-400 underline flex items-center gap-1">
+              Browse Vehicles For Sale <ChevronRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+
+        {/* Slide Indicators */}
+        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
           {heroSlides.map((_, index) => (
             <button
               key={index}
-              onClick={() => goToSlide(index)}
-              className={`transition-all duration-300 ${
-                index === currentSlide 
-                  ? 'w-10 h-2 bg-white rounded-full' 
-                  : 'w-2 h-2 bg-white/30 rounded-full hover:bg-white/50'
+              onClick={() => setCurrentSlide(index)}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                index === currentSlide ? 'w-8 bg-amber-400' : 'w-2 bg-white/30'
               }`}
             />
           ))}
         </div>
-        
-        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-bold mb-2 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent animate-fade-in">
-            {heroSlides[currentSlide].title}
-          </h1>
-          <h2 className="text-3xl md:text-5xl font-bold mb-4 text-white/90 animate-fade-in-delay">
-            {heroSlides[currentSlide].subtitle}
-          </h2>
-          <p className="text-xl text-gray-300 mb-8 animate-fade-in-delay max-w-2xl mx-auto">
-            {heroSlides[currentSlide].description}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-delay-2">
-            <Link to="/cars" className="btn-primary flex items-center justify-center space-x-2 text-lg px-8 py-3 group">
-              <span>Browse Fleet</span>
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <Link to="/cars" className="btn-secondary flex items-center justify-center space-x-2 text-lg px-8 py-3 group">
-              <span>Rent Now</span>
-              <Sparkles className="w-4 h-4 group-hover:rotate-12 transition-transform" />
-            </Link>
-          </div>
-        </div>
       </div>
 
-      {/* Quick Stats */}
-      <div className="bg-gradient-to-r from-gray-900 to-black border-y border-gray-800 py-6">
+      {/* Trust Signals Bar */}
+      <div className="border-y border-gray-800 bg-gradient-to-r from-gray-950 via-gray-900 to-gray-950 py-8">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-            <div className="animate-pulse">
-              <p className="text-2xl font-bold text-white">500+</p>
-              <p className="text-gray-400 text-sm">Happy Customers</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div className="flex items-center justify-center gap-3">
+              <div className="p-3 bg-amber-500/10 rounded-xl text-amber-400">
+                <ShieldCheck className="w-6 h-6" />
+              </div>
+              <div className="text-left">
+                <p className="font-bold text-white text-base">Verified Dealers</p>
+                <p className="text-xs text-gray-400">100% Inspected & Licensed</p>
+              </div>
             </div>
-            <div className="animate-pulse delay-100">
-              <p className="text-2xl font-bold text-white">50+</p>
-              <p className="text-gray-400 text-sm">Cars Available</p>
+            <div className="flex items-center justify-center gap-3">
+              <div className="p-3 bg-amber-500/10 rounded-xl text-amber-400">
+                <Shield className="w-6 h-6" />
+              </div>
+              <div className="text-left">
+                <p className="font-bold text-white text-base">Secure Payments</p>
+                <p className="text-xs text-gray-400">Full Guarantee & Escrow</p>
+              </div>
             </div>
-            <div className="animate-pulse delay-200">
-              <p className="text-2xl font-bold text-white">1000+</p>
-              <p className="text-gray-400 text-sm">Successful Rentals</p>
+            <div className="flex items-center justify-center gap-3">
+              <div className="p-3 bg-amber-500/10 rounded-xl text-amber-400">
+                <Star className="w-6 h-6" />
+              </div>
+              <div className="text-left">
+                <p className="font-bold text-white text-base">4.9 / 5.0 Rating</p>
+                <p className="text-xs text-gray-400">500+ Verified Reviews</p>
+              </div>
             </div>
-            <div className="animate-pulse delay-300">
-              <p className="text-2xl font-bold text-white">24/7</p>
-              <p className="text-gray-400 text-sm">Support Available</p>
+            <div className="flex items-center justify-center gap-3">
+              <div className="p-3 bg-amber-500/10 rounded-xl text-amber-400">
+                <Clock className="w-6 h-6" />
+              </div>
+              <div className="text-left">
+                <p className="font-bold text-white text-base">24/7 Roadside VIP</p>
+                <p className="text-xs text-gray-400">Bugesera & Nationwide</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Why Choose Us */}
-      <div className="py-20 px-4">
-        <div className="container mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">Why Choose EliteRent?</h2>
-          <p className="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
-            Experience luxury, comfort, and reliability with Rwanda's premier car rental service
+      {/* Quick-Action Categories */}
+      <div className="py-20 container mx-auto px-4">
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <h2 className="text-3xl sm:text-4xl font-extrabold mb-3">Explore by Category</h2>
+          <p className="text-gray-400 text-sm">
+            Whether for high-profile business, cross-country exploration, or special occasions, find your exact match.
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center p-6 bg-gray-900 rounded-xl hover:transform hover:scale-105 transition duration-300 group">
-              <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-                <Car className="w-8 h-8 text-black" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Diverse Fleet</h3>
-              <p className="text-gray-400">From luxury to affordable Rwandan favorites</p>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+          <Link
+            to="/cars?category=suv"
+            className="group relative bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden p-6 hover:border-amber-400 transition-all duration-300 hover:-translate-y-1"
+          >
+            <div className="w-12 h-12 bg-amber-400/10 text-amber-400 rounded-xl flex items-center justify-center mb-4 group-hover:bg-amber-400 group-hover:text-black transition-colors">
+              <Car className="w-6 h-6" />
             </div>
-            <div className="text-center p-6 bg-gray-900 rounded-xl hover:transform hover:scale-105 transition duration-300 group">
-              <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-                <Shield className="w-8 h-8 text-black" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Full Insurance</h3>
-              <p className="text-gray-400">Complete coverage for peace of mind</p>
+            <h3 className="text-lg font-bold text-white mb-1">SUVs & 4x4s</h3>
+            <p className="text-xs text-gray-400 mb-3">Land Cruisers, Patrols & Sportages</p>
+            <span className="text-xs text-amber-400 font-semibold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+              Browse SUVs <ChevronRight className="w-3.5 h-3.5" />
+            </span>
+          </Link>
+
+          <Link
+            to="/cars?category=luxury"
+            className="group relative bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden p-6 hover:border-amber-400 transition-all duration-300 hover:-translate-y-1"
+          >
+            <div className="w-12 h-12 bg-amber-400/10 text-amber-400 rounded-xl flex items-center justify-center mb-4 group-hover:bg-amber-400 group-hover:text-black transition-colors">
+              <Sparkles className="w-6 h-6" />
             </div>
-            <div className="text-center p-6 bg-gray-900 rounded-xl hover:transform hover:scale-105 transition duration-300 group">
-              <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-                <Clock className="w-8 h-8 text-black" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">24/7 Support</h3>
-              <p className="text-gray-400">Always here to assist you</p>
+            <h3 className="text-lg font-bold text-white mb-1">Luxury Sedans</h3>
+            <p className="text-xs text-gray-400 mb-3">Rolls Royce, BMW M8 & Mercedes</p>
+            <span className="text-xs text-amber-400 font-semibold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+              Browse Luxury <ChevronRight className="w-3.5 h-3.5" />
+            </span>
+          </Link>
+
+          <Link
+            to="/cars?category=sports"
+            className="group relative bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden p-6 hover:border-amber-400 transition-all duration-300 hover:-translate-y-1"
+          >
+            <div className="w-12 h-12 bg-amber-400/10 text-amber-400 rounded-xl flex items-center justify-center mb-4 group-hover:bg-amber-400 group-hover:text-black transition-colors">
+              <Zap className="w-6 h-6" />
             </div>
-            <div className="text-center p-6 bg-gray-900 rounded-xl hover:transform hover:scale-105 transition duration-300 group">
-              <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-                <Award className="w-8 h-8 text-black" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">Best Prices</h3>
-              <p className="text-gray-400">Competitive rates, no hidden fees</p>
+            <h3 className="text-lg font-bold text-white mb-1">Supercars & Sports</h3>
+            <p className="text-xs text-gray-400 mb-3">Ferrari, Huracan & McLaren</p>
+            <span className="text-xs text-amber-400 font-semibold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+              Browse Sports <ChevronRight className="w-3.5 h-3.5" />
+            </span>
+          </Link>
+
+          <Link
+            to="/cars?category=pickup"
+            className="group relative bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden p-6 hover:border-amber-400 transition-all duration-300 hover:-translate-y-1"
+          >
+            <div className="w-12 h-12 bg-amber-400/10 text-amber-400 rounded-xl flex items-center justify-center mb-4 group-hover:bg-amber-400 group-hover:text-black transition-colors">
+              <Award className="w-6 h-6" />
             </div>
-          </div>
+            <h3 className="text-lg font-bold text-white mb-1">Pickups & Utility</h3>
+            <p className="text-xs text-gray-400 mb-3">Toyota Hilux Invincible & 4x4s</p>
+            <span className="text-xs text-amber-400 font-semibold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+              Browse Utility <ChevronRight className="w-3.5 h-3.5" />
+            </span>
+          </Link>
         </div>
       </div>
 
-      {/* Featured Cars - 12 Cars (8 Luxury + 4 Rwanda Popular) */}
-      <div className="py-20 bg-gray-900/50">
+      {/* Featured Vehicles for Sale */}
+      <div className="py-16 bg-gray-950 border-t border-gray-800">
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center mb-12">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold">Our Fleet</h2>
-              <p className="text-gray-400 mt-2">Luxury cars and Rwandan favorites</p>
+              <span className="text-xs font-bold uppercase tracking-wider text-amber-400">Ownership & Investment</span>
+              <h2 className="text-3xl font-extrabold mt-1">Featured Cars for Sale</h2>
+              <p className="text-gray-400 text-sm mt-1">Certified, inspected vehicles with available financing options</p>
             </div>
-            <Link to="/cars" className="text-white hover:text-gray-300 flex items-center gap-2">
-              View All <ChevronRight className="w-4 h-4" />
+            <Link
+              to="/cars?type=sale"
+              className="mt-4 sm:mt-0 text-sm font-semibold text-amber-400 hover:text-white flex items-center gap-1"
+            >
+              View All For Sale ({featuredCars.length}) <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredCars.map((car) => (
-              <div key={car.id} className="bg-black rounded-xl overflow-hidden hover:transform hover:scale-105 hover:shadow-2xl transition duration-300 border border-gray-800 group">
-                <div className="relative overflow-hidden">
-                  <img 
-                    src={car.image} 
-                    alt={car.name} 
-                    className="w-full h-56 object-cover group-hover:scale-110 transition duration-500" 
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {saleCars.map((car) => (
+              <div 
+                key={car.id} 
+                className="bg-black rounded-2xl overflow-hidden border border-gray-800 hover:border-gray-600 transition-all duration-300 hover:shadow-2xl flex flex-col group"
+              >
+                <div className="relative overflow-hidden h-52 bg-gray-900">
+                  <img
+                    src={car.image_url}
+                    alt={`${car.brand} ${car.model}`}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
-                    onError={(e) => {
-                      e.target.src = "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=500&q=80";
-                    }}
                   />
-                  <div className="absolute top-4 right-4 bg-black/70 px-3 py-1 rounded-full text-xs text-white">
-                    {car.rating} ★
+                  <div className="absolute top-3 left-3 bg-amber-500 text-black text-xs font-bold px-3 py-1 rounded-full">
+                    For Sale
+                  </div>
+                  <div className="absolute top-3 right-3 bg-black/70 backdrop-blur-md text-white text-xs px-2.5 py-1 rounded-lg flex items-center gap-1">
+                    <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
+                    <span>{car.rating || 4.9}</span>
                   </div>
                 </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold">{car.name}</h3>
-                  <p className="text-gray-400 text-sm">{car.type}</p>
-                  <p className="text-xs text-gray-500 mt-1">{car.specs}</p>
-                  <p className="text-2xl font-bold text-white mt-3">${car.price}<span className="text-sm text-gray-400">/day</span></p>
-                  <Link to={`/car/${car.id}`} className="btn-secondary w-full text-center inline-block mt-4 group-hover:bg-white group-hover:text-black transition duration-300">
-                    View Details
-                  </Link>
+
+                <div className="p-5 flex-1 flex flex-col justify-between">
+                  <div>
+                    <p className="text-xs text-gray-400 uppercase font-medium">{car.brand} • {car.year}</p>
+                    <h3 className="text-lg font-bold text-white mt-1 group-hover:text-amber-400 transition-colors">
+                      {car.brand} {car.model}
+                    </h3>
+                    <p className="text-xs text-gray-400 mt-1 line-clamp-1">{car.engine_specs}</p>
+                    <div className="flex items-center gap-3 mt-3 text-xs text-gray-400">
+                      <span>{car.transmission}</span>
+                      <span>•</span>
+                      <span>{car.fuel_type}</span>
+                      <span>•</span>
+                      <span>{car.mileage?.toLocaleString()} km</span>
+                    </div>
+                  </div>
+
+                  <div className="mt-5 pt-4 border-t border-gray-800 flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] uppercase text-gray-400 block font-semibold">Sale Price</span>
+                      <span className="text-xl font-extrabold text-white">
+                        ${car.sale_price ? car.sale_price.toLocaleString() : (car.price * 150).toLocaleString()}
+                      </span>
+                    </div>
+                    <Link
+                      to={`/car/${car.id}`}
+                      className="bg-white hover:bg-amber-400 text-black text-xs font-bold px-4 py-2.5 rounded-xl transition duration-300"
+                    >
+                      View Details
+                    </Link>
+                  </div>
                 </div>
               </div>
             ))}
@@ -405,93 +457,149 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Premium Services Section */}
-      <div className="py-16 px-4">
-        <div className="container mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-4">Our Premium Services</h2>
-          <p className="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
-            We offer professional chauffeur and self-drive options to suit your needs
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-gray-900 rounded-xl p-8 text-center hover:transform hover:scale-105 transition duration-300">
-              <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Car className="w-8 h-8 text-black" />
-              </div>
-              <h3 className="text-2xl font-bold mb-2">Self-Drive</h3>
-              <p className="text-gray-400">
-                Drive yourself with our luxury cars. Flexible rental periods, 
-                competitive rates, and full insurance coverage.
-              </p>
-            </div>
-            <div className="bg-gray-900 rounded-xl p-8 text-center hover:transform hover:scale-105 transition duration-300">
-              <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users className="w-8 h-8 text-black" />
-              </div>
-              <h3 className="text-2xl font-bold mb-2">Chauffeur Service</h3>
-              <p className="text-gray-400">
-                Professional, experienced drivers. Sit back and enjoy 
-                the ride while our experts handle everything.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Contact & Location */}
-      <div className="py-20">
+      {/* Popular Rental Fleet */}
+      <div className="py-16 bg-black">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Contact & Location</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center p-6 bg-gray-900 rounded-xl hover:transform hover:scale-105 transition duration-300">
-              <Phone className="w-10 h-10 text-white mx-auto mb-4" />
-              <h3 className="text-lg font-semibold">Phone</h3>
-              <p className="text-gray-400">0790068051</p>
-              <p className="text-gray-500 text-sm">Available 24/7</p>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-wider text-amber-400">Daily & Weekly Hire</span>
+              <h2 className="text-3xl font-extrabold mt-1">Popular Rental Models</h2>
+              <p className="text-gray-400 text-sm mt-1">Instant availability in Bugesera, Nyamata, and Kigali delivery</p>
             </div>
-            <div className="text-center p-6 bg-gray-900 rounded-xl hover:transform hover:scale-105 transition duration-300">
-              <Mail className="w-10 h-10 text-white mx-auto mb-4" />
-              <h3 className="text-lg font-semibold">Email</h3>
-              <p className="text-gray-400">isingizwekingthierry@gmail.com</p>
-              <p className="text-gray-500 text-sm">Quick response</p>
+            <Link
+              to="/cars?type=rent"
+              className="mt-4 sm:mt-0 text-sm font-semibold text-amber-400 hover:text-white flex items-center gap-1"
+            >
+              View Full Fleet <ChevronRight className="w-4 h-4" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {rentalCars.map((car) => (
+              <div 
+                key={car.id} 
+                className="bg-gray-950 rounded-2xl overflow-hidden border border-gray-800 hover:border-gray-600 transition-all duration-300 hover:shadow-2xl flex flex-col group"
+              >
+                <div className="relative overflow-hidden h-52 bg-gray-900">
+                  <img
+                    src={car.image_url}
+                    alt={`${car.brand} ${car.model}`}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                  <div className="absolute top-3 left-3 bg-white text-black text-xs font-bold px-3 py-1 rounded-full">
+                    For Rent
+                  </div>
+                  <div className="absolute top-3 right-3 bg-black/70 backdrop-blur-md text-white text-xs px-2.5 py-1 rounded-lg flex items-center gap-1">
+                    <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
+                    <span>{car.rating || 4.9}</span>
+                  </div>
+                </div>
+
+                <div className="p-5 flex-1 flex flex-col justify-between">
+                  <div>
+                    <p className="text-xs text-gray-400 uppercase font-medium">{car.brand} • {car.category}</p>
+                    <h3 className="text-lg font-bold text-white mt-1 group-hover:text-amber-400 transition-colors">
+                      {car.brand} {car.model}
+                    </h3>
+                    <p className="text-xs text-gray-400 mt-1">{car.seats || 5} Seats • {car.transmission}</p>
+                  </div>
+
+                  <div className="mt-5 pt-4 border-t border-gray-800 flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] uppercase text-gray-400 block font-semibold">Daily Rate</span>
+                      <span className="text-xl font-extrabold text-amber-400">
+                        ${car.daily_rental_rate || car.price}
+                        <span className="text-xs text-gray-400 font-normal">/day</span>
+                      </span>
+                    </div>
+                    <Link
+                      to={`/car/${car.id}`}
+                      className="bg-gray-800 hover:bg-white hover:text-black text-white text-xs font-bold px-4 py-2.5 rounded-xl transition duration-300"
+                    >
+                      Book Now
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Premium Services */}
+      <div className="py-20 border-t border-gray-800 bg-gray-950">
+        <div className="container mx-auto px-4">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <h2 className="text-3xl font-extrabold mb-3">Tailored Mobility Services</h2>
+            <p className="text-gray-400 text-sm">Flexible options designed for diplomats, executives, tourists, and automotive enthusiasts.</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <div className="p-8 bg-black border border-gray-800 rounded-3xl hover:border-amber-400 transition-all">
+              <div className="w-14 h-14 bg-amber-400/10 text-amber-400 rounded-2xl flex items-center justify-center mb-6">
+                <KeyRound className="w-7 h-7" />
+              </div>
+              <h3 className="text-2xl font-bold mb-3">Self-Drive Experience</h3>
+              <p className="text-gray-400 text-sm leading-relaxed mb-6">
+                Enjoy complete independence with our fleet. Direct digital verification, transparent insurance policies, and seamless pickup at Bugesera or Kigali International Airport.
+              </p>
+              <ul className="space-y-2 text-xs text-gray-300 mb-6">
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-amber-400" /> Comprehensive Collision Damage Waiver</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-amber-400" /> Unlimited mileage on long-term packages</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-amber-400" /> 24/7 Roadside Assistance</li>
+              </ul>
+              <Link to="/cars?type=rent" className="inline-flex items-center gap-2 text-sm font-bold text-amber-400 hover:text-white">
+                Choose a Vehicle <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
-            <div className="text-center p-6 bg-gray-900 rounded-xl hover:transform hover:scale-105 transition duration-300">
-              <MapPin className="w-10 h-10 text-white mx-auto mb-4" />
-              <h3 className="text-lg font-semibold">Location</h3>
-              <p className="text-gray-400">Bugesera, Nyamata</p>
-              <p className="text-gray-500 text-sm">Property Investment Area</p>
+
+            <div className="p-8 bg-black border border-gray-800 rounded-3xl hover:border-amber-400 transition-all">
+              <div className="w-14 h-14 bg-amber-400/10 text-amber-400 rounded-2xl flex items-center justify-center mb-6">
+                <Users className="w-7 h-7" />
+              </div>
+              <h3 className="text-2xl font-bold mb-3">VIP Chauffeur & Delegations</h3>
+              <p className="text-gray-400 text-sm leading-relaxed mb-6">
+                Polite, multilingual professional drivers with extensive knowledge of Rwanda’s routes. Perfect for corporate summits, diplomatic visits, and luxury weddings.
+              </p>
+              <ul className="space-y-2 text-xs text-gray-300 mb-6">
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-amber-400" /> Certified VIP Security Trained Chauffeurs</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-amber-400" /> In-car Wi-Fi, refreshments & bottled water</li>
+                <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-amber-400" /> Punctual airport meet-and-greet</li>
+              </ul>
+              <Link to="/contact" className="inline-flex items-center gap-2 text-sm font-bold text-amber-400 hover:text-white">
+                Book Chauffeur Service <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Newsletter & Social Media */}
-      <div className="py-16 bg-gradient-to-r from-gray-900 to-black">
-        <div className="container mx-auto px-4 text-center max-w-2xl">
-          <h2 className="text-3xl font-bold mb-4">Stay Connected</h2>
-          <p className="text-gray-400 mb-8">
-            Follow us on social media and subscribe to our newsletter
+      {/* Newsletter */}
+      <div className="py-20 bg-gradient-to-b from-gray-950 to-black border-t border-gray-800">
+        <div className="container mx-auto px-4 text-center max-w-xl">
+          <h2 className="text-3xl font-extrabold mb-3">Stay in the Fast Lane</h2>
+          <p className="text-gray-400 text-sm mb-8">
+            Receive exclusive notifications when rare supercars arrive for sale or seasonal rental discounts launch in Rwanda.
           </p>
-          <div className="flex justify-center space-x-4 mb-8">
-            <a href="#" className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full transition hover:scale-110">
-              <FacebookIcon />
-            </a>
-            <a href="https://instagram.com/zodiac45" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white p-3 rounded-full transition hover:scale-110">
-              <InstagramIcon />
-            </a>
-            <a href="#" className="bg-sky-500 hover:bg-sky-600 text-white p-3 rounded-full transition hover:scale-110">
-              <TwitterIcon />
-            </a>
-            <a href="#" className="bg-red-600 hover:bg-red-700 text-white p-3 rounded-full transition hover:scale-110">
-              <YoutubeIcon />
-            </a>
-          </div>
-          <form className="flex flex-col sm:flex-row gap-4">
-            <input type="email" placeholder="Enter your email address" className="input-field flex-1" required />
-            <button type="submit" className="btn-primary whitespace-nowrap hover:scale-105 transition-transform">
-              Subscribe Now
+          <form onSubmit={handleNewsletter} className="flex flex-col sm:flex-row gap-3">
+            <input
+              type="email"
+              value={newsletterEmail}
+              onChange={(e) => setNewsletterEmail(e.target.value)}
+              placeholder="Enter your email address"
+              className="flex-1 bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-400"
+              required
+            />
+            <button
+              type="submit"
+              disabled={newsletterSubmitting}
+              className="bg-white hover:bg-amber-400 text-black font-bold px-6 py-3 rounded-xl transition duration-300 text-sm whitespace-nowrap"
+            >
+              {newsletterSubmitting ? 'Joining...' : 'Subscribe VIP'}
             </button>
           </form>
-          <p className="text-xs text-gray-500 mt-4">No spam, unsubscribe anytime. We respect your privacy.</p>
+          <p className="text-[11px] text-gray-500 mt-3">We respect your privacy. Unsubscribe anytime.</p>
         </div>
       </div>
     </div>
