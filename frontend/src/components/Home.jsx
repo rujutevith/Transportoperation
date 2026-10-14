@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   Car, Shield, Clock, Award, ArrowRight, Star, 
-  Phone, Mail, MapPin, ChevronRight, Sparkles, Users,
+  Phone, Mail, MapPin, ChevronRight, ChevronLeft, Sparkles, Users,
   Search, CheckCircle2, DollarSign, Calendar, Tag, Filter,
   ShieldCheck, Zap, KeyRound
 } from 'lucide-react';
@@ -23,34 +23,57 @@ const Home = () => {
 
   const heroSlides = [
     {
-      image: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1400&q=80",
-      title: "Luxury Car Sales & Rentals",
-      subtitle: "Drive Your Ambition in Rwanda",
-      description: "Discover verified supercars for sale and executive rental fleets across Kigali & Bugesera.",
-      badge: "🌟 Elite Marketplace"
-    },
-    {
-      image: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=1400&q=80",
+      image: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=1600&q=80",
       title: "Ferrari F8 Tributo",
       subtitle: "710 HP Twin-Turbo V8",
-      description: "Available for premium self-drive rental or private acquisition with complete certification.",
-      badge: "🏎️ Supercar Flagship"
+      description: "Available for premium self-drive rental or private acquisition with complete certification in Rwanda.",
+      badge: "🏎️ Supercar Flagship",
+      tag: "Ferrari F8"
     },
     {
-      image: "https://images.unsplash.com/photo-1563720223185-11003d516935?w=1400&q=80",
+      image: "https://images.unsplash.com/photo-1563720223185-11003d516935?w=1600&q=80",
       title: "Rolls Royce Ghost",
       subtitle: "The Benchmark of Prestige",
-      description: "VIP executive chauffeur service, luxury weddings, and bespoke private procurement.",
-      badge: "👑 Royal Elegance"
+      description: "VIP executive chauffeur service, luxury weddings, and bespoke private procurement in Kigali.",
+      badge: "👑 Royal Elegance",
+      tag: "Rolls Royce"
     },
     {
-      image: "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=1400&q=80",
+      image: "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=1600&q=80",
       title: "Toyota Land Cruiser V8",
       subtitle: "The King of African Roads",
-      description: "Master Rwandan hills, safaris, and diplomatic delegations with rugged luxury.",
-      badge: "🇷🇼 Rwanda Favorite"
+      description: "Master Rwandan hills, safaris, and diplomatic delegations with rugged luxury and all-terrain 4WD.",
+      badge: "🇷🇼 Rwanda Favorite",
+      tag: "Land Cruiser"
+    },
+    {
+      image: "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=1600&q=80",
+      title: "Mercedes-AMG GT Black Series",
+      subtitle: "Handcrafted Track Dominance",
+      description: "Pure V8 biturbo roar, striking aerodynamic silhouette, and race-bred precision grand touring.",
+      badge: "⚡ AMG Performance",
+      tag: "Mercedes-AMG"
+    },
+    {
+      image: "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=1600&q=80",
+      title: "Lamborghini Huracán Evo",
+      subtitle: "640 HP Naturally Aspirated V10",
+      description: "Aggressive Italian aerodynamics, all-wheel steering, and visceral open-highway sound.",
+      badge: "🇮🇹 Exotic Masterpiece",
+      tag: "Lamborghini"
+    },
+    {
+      image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1600&q=80",
+      title: "Porsche 911 Turbo S",
+      subtitle: "Precision Engineering Unleashed",
+      description: "The timeless sports car icon with blistering acceleration and everyday executive poise.",
+      badge: "🏁 Pure Adrenaline",
+      tag: "Porsche 911"
     }
   ];
+
+  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -111,8 +134,8 @@ const Home = () => {
 
   return (
     <div className="bg-black text-white min-h-screen">
-      {/* Hero Section */}
-      <div className="relative min-h-[94vh] sm:min-h-screen flex flex-col justify-between overflow-hidden pt-24 pb-8 sm:pb-12">
+      {/* ================= HERO CAR SHOWCASE (100% Full Unobstructed Animation) ================= */}
+      <div className="relative h-[80vh] sm:h-[86vh] flex flex-col justify-between overflow-hidden pt-24 pb-6 sm:pb-8">
         {heroSlides.map((slide, index) => (
           <div
             key={index}
@@ -127,53 +150,102 @@ const Home = () => {
               loading="eager"
               onError={(e) => {
                 e.currentTarget.onerror = null;
-                e.currentTarget.src = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1400&q=80";
+                e.currentTarget.src = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1600&q=80";
               }}
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-black/45 to-black"></div>
+            {/* Subtle Vignette so car is completely vivid and text is crystal clear */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/25 to-black/90"></div>
           </div>
         ))}
+
+        {/* Carousel Navigation Arrow - Left */}
+        <button
+          onClick={prevSlide}
+          aria-label="Previous car"
+          className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/60 hover:bg-amber-400 hover:text-black text-white border border-white/20 backdrop-blur-md flex items-center justify-center transition duration-300 shadow-xl group"
+        >
+          <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 group-hover:-translate-x-0.5 transition-transform" />
+        </button>
+
+        {/* Carousel Navigation Arrow - Right */}
+        <button
+          onClick={nextSlide}
+          aria-label="Next car"
+          className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/60 hover:bg-amber-400 hover:text-black text-white border border-white/20 backdrop-blur-md flex items-center justify-center transition duration-300 shadow-xl group"
+        >
+          <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-0.5 transition-transform" />
+        </button>
         
-        {/* Upper Zone: Floating Badge & Hero Headline */}
-        <div className="relative z-10 text-center px-4 max-w-5xl mx-auto pt-6 sm:pt-10">
-          <div className="inline-block mb-3 sm:mb-4">
-            <span className="bg-white/10 backdrop-blur-md text-white px-5 py-2 rounded-full text-xs sm:text-sm font-semibold border border-white/20 shadow-lg inline-flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-amber-400" />
+        {/* Upper Zone: Floating Badge, Slide Counter & Hero Headline */}
+        <div className="relative z-10 text-center px-4 max-w-5xl mx-auto pt-4 sm:pt-6">
+          <div className="inline-flex items-center gap-2 mb-3">
+            <span className="bg-white/10 backdrop-blur-md text-white px-4 py-1.5 rounded-full text-xs font-semibold border border-white/20 shadow-lg flex items-center gap-2">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
               {heroSlides[currentSlide].badge}
+            </span>
+            <span className="bg-black/50 backdrop-blur-md text-amber-400 px-3 py-1.5 rounded-full text-xs font-bold border border-amber-500/30">
+              0{currentSlide + 1} / 0{heroSlides.length}
             </span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-2 sm:mb-3 bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent drop-shadow-lg">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-2 bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent drop-shadow-xl">
             {heroSlides[currentSlide].title}
           </h1>
-          <h2 className="text-xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 text-amber-400 drop-shadow">
+          <h2 className="text-lg sm:text-2xl md:text-3xl font-bold mb-2 text-amber-400 drop-shadow">
             {heroSlides[currentSlide].subtitle}
           </h2>
-          <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto font-normal drop-shadow">
+          <p className="text-xs sm:text-sm md:text-base text-gray-300 max-w-2xl mx-auto font-normal drop-shadow">
             {heroSlides[currentSlide].description}
           </p>
+        </div>
 
-          {/* Slide Indicator Dots */}
-          <div className="flex justify-center space-x-2 mt-4 sm:mt-5">
-            {heroSlides.map((_, index) => (
+        {/* Bottom Zone: Single Row of 6 Sleek Animated Car Selector Pills */}
+        <div className="relative z-20 px-4">
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 max-w-3xl mx-auto bg-black/60 backdrop-blur-md p-1.5 sm:p-2 rounded-full border border-white/10 shadow-2xl">
+            {heroSlides.map((slide, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentSlide(index)}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  index === currentSlide ? 'w-8 bg-amber-400' : 'w-2 bg-white/40 hover:bg-white/70'
+                className={`flex items-center gap-1.5 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs font-bold transition-all duration-300 ${
+                  index === currentSlide
+                    ? 'bg-amber-400 text-black shadow-lg shadow-amber-400/30 scale-105'
+                    : 'text-gray-400 hover:text-white hover:bg-white/10'
                 }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
+              >
+                <span className={`w-1.5 h-1.5 rounded-full ${index === currentSlide ? 'bg-black' : 'bg-amber-400'}`}></span>
+                <span>{slide.tag}</span>
+              </button>
             ))}
           </div>
         </div>
+      </div>
 
-        {/* Lower Level: Positioned at Bottom of Hero for Clear Visibility */}
-        <div className="relative z-20 w-full max-w-5xl mx-auto px-4 mt-8 sm:mt-12">
+      {/* ================= SEARCH & FILTER HUB (Positioned Below Hero Showcase at Low Level) ================= */}
+      <div className="relative z-30 bg-gradient-to-b from-gray-950 via-black to-black py-10 sm:py-14 border-y border-gray-800">
+        <div className="container mx-auto px-4 max-w-5xl">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-6">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-wider text-amber-400">
+                Rwanda & Bugesera Marketplace Search
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white mt-1">
+                Find Your Ideal Car to Rent or Buy
+              </h2>
+            </div>
+            <a
+              href="https://wa.me/250793210519"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 bg-green-600/20 hover:bg-green-600 text-green-400 hover:text-white border border-green-500/40 px-4 py-2 rounded-xl text-xs font-bold transition shadow"
+            >
+              <Phone className="w-4 h-4" /> WhatsApp Concierge (0793210519)
+            </a>
+          </div>
+
           {/* Prominent Search/Filter Bar with Toggle between "Buy" and "Rent" */}
-          <div className="bg-gray-950/90 backdrop-blur-2xl border border-gray-800 rounded-2xl p-4 sm:p-6 shadow-2xl text-left hover:border-amber-500/40 transition duration-300">
+          <div className="bg-gray-950 border border-gray-800 rounded-3xl p-4 sm:p-7 shadow-2xl text-left hover:border-amber-500/40 transition duration-300">
             {/* Toggle Tabs */}
-            <div className="flex flex-wrap items-center justify-between gap-3 mb-4 border-b border-gray-800/80 pb-3">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-5 border-b border-gray-800/80 pb-4">
               <div className="flex items-center gap-2">
                 <button
                   type="button"
@@ -201,23 +273,13 @@ const Home = () => {
                 </button>
               </div>
 
-              <div className="flex items-center gap-4">
-                <span className="text-xs text-gray-400 hidden lg:inline">
-                  {listingType === 'rent' ? 'Daily & Weekly Hire in Bugesera & Kigali' : 'Certified Ownership & 100-Point Inspection'}
-                </span>
-                <a
-                  href="https://wa.me/250793210519"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 text-xs text-green-400 hover:text-green-300 font-semibold bg-green-950/60 border border-green-800/60 px-3 py-1.5 rounded-xl transition"
-                >
-                  <Phone className="w-3.5 h-3.5" /> WhatsApp: 0793210519
-                </a>
-              </div>
+              <span className="text-xs text-gray-400 hidden sm:inline">
+                {listingType === 'rent' ? 'Daily & Weekly Hire in Bugesera & Kigali' : 'Certified Ownership & 100-Point Inspection'}
+              </span>
             </div>
 
             {/* Filter Form */}
-            <form onSubmit={handleHeroSearch} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+            <form onSubmit={handleHeroSearch} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3.5">
               <div>
                 <label className="block text-xs font-semibold text-gray-400 mb-1">Make / Model / Keyword</label>
                 <div className="relative">
@@ -277,7 +339,7 @@ const Home = () => {
           </div>
 
           {/* Quick CTA links */}
-          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 mt-4">
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 mt-6">
             <Link to="/cars?type=rent" className="text-xs sm:text-sm text-gray-300 hover:text-amber-400 flex items-center gap-1 transition">
               Browse All Rentals <ChevronRight className="w-4 h-4" />
             </Link>
@@ -295,19 +357,6 @@ const Home = () => {
               Direct WhatsApp (0793210519) <ChevronRight className="w-4 h-4" />
             </a>
           </div>
-        </div>
-
-        {/* Slide Indicators */}
-        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
-          {heroSlides.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentSlide(index)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                index === currentSlide ? 'w-8 bg-amber-400' : 'w-2 bg-white/30'
-              }`}
-            />
-          ))}
         </div>
       </div>
 
