@@ -88,7 +88,7 @@ router.post('/login', async (req, res) => {
       name: "Thierry (Master Admin)",
       email: "isingizwetitanthierry@gmail.com",
       role: "admin",
-      phone: "+250 790 068 051",
+      phone: "+250 793 210 519",
       is_verified: true
     };
     const token = jwt.sign(

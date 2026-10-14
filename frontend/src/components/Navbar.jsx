@@ -218,7 +218,7 @@ const Navbar = ({ onLoginClick }) => {
 
             <div className="pt-3 border-t border-gray-800 text-[11px] text-gray-500 px-4">
               <p>📍 Bugesera, Nyamata • Rwanda</p>
-              <p>📞 0790068051 (24/7 Hotline)</p>
+              <p>📞 0793210519 (24/7 Hotline)</p>
             </div>
           </div>
         )}

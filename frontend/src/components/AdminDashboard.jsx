@@ -660,7 +660,15 @@ const AdminDashboard = () => {
                 <div key={car.id} className="bg-black border border-gray-800 rounded-2xl overflow-hidden p-4 flex flex-col justify-between">
                   <div>
                     <div className="relative h-40 rounded-xl overflow-hidden mb-3 bg-gray-900">
-                      <img src={car.image_url} alt="" className="w-full h-full object-cover" />
+                      <img 
+                        src={car.image_url} 
+                        alt="" 
+                        className="w-full h-full object-cover" 
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=80";
+                        }}
+                      />
                       <span className={`absolute top-2 left-2 text-[10px] font-bold px-2 py-0.5 rounded ${
                         car.is_approved ? 'bg-green-500 text-black' : 'bg-red-500 text-white'
                       }`}>
@@ -847,7 +855,15 @@ const AdminDashboard = () => {
 
                     {v.license_front_url && (
                       <div className="h-36 bg-gray-900 rounded-xl overflow-hidden border border-gray-800">
-                        <img src={v.license_front_url} alt="License Front" className="w-full h-full object-cover" />
+                        <img 
+                          src={v.license_front_url} 
+                          alt="License Front" 
+                          className="w-full h-full object-cover" 
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=600&q=80";
+                          }}
+                        />
                       </div>
                     )}
 

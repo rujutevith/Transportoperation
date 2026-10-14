@@ -71,7 +71,7 @@ const Contact = () => {
     setChatInput('');
 
     setTimeout(() => {
-      let botReply = "Thank you for reaching out! A live concierge representative is reviewing your message. You can also reach our 24/7 hotline at 0790068051.";
+      let botReply = "Thank you for reaching out! A live concierge representative is reviewing your message. You can also reach our 24/7 hotline at 0793210519.";
       const lower = userText.toLowerCase();
       if (lower.includes('rent') || lower.includes('hire')) {
         botReply = "Our rental fleet includes Land Cruisers, luxury sedans, and sports cars. You can browse them on our Cars page!";
@@ -82,7 +82,7 @@ const Contact = () => {
     }, 700);
   };
 
-  const whatsappNumber = '250790068051';
+  const whatsappNumber = '250793210519';
   const whatsappLink = `https://wa.me/${whatsappNumber}`;
   const instagramUsername = 'zodiac45';
   const instagramLink = `https://instagram.com/${instagramUsername}`;
@@ -116,7 +116,7 @@ const Contact = () => {
                 <Phone className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="font-bold text-white">Direct Hotline / WhatsApp</p>
-                  <p className="text-gray-400">0790068051 / +250 790 068 051</p>
+                  <p className="text-gray-400">0793210519 / +250 793 210 519</p>
                 </div>
               </div>
 

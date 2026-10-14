@@ -356,6 +356,10 @@ const Cars = () => {
                             alt={`${car.brand} ${car.model}`}
                             className="w-full h-full object-cover"
                             loading="lazy"
+                            onError={(e) => {
+                              e.currentTarget.onerror = null;
+                              e.currentTarget.src = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=80";
+                            }}
                           />
                           <button
                             onClick={(e) => handleToggleWishlist(car.id, e)}
@@ -433,6 +437,10 @@ const Cars = () => {
                           alt={`${car.brand} ${car.model}`}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           loading="lazy"
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=80";
+                          }}
                         />
                         <div className="absolute top-3 left-3 flex gap-1.5">
                           {isForRent && (

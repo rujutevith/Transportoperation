@@ -16,9 +16,21 @@ const UserProfile = () => {
         
         <div className="bg-gray-900 rounded-xl p-8">
           <div className="flex items-center justify-center mb-6">
-            <div className="w-24 h-24 bg-gray-700 rounded-full flex items-center justify-center">
-              <User className="w-12 h-12 text-white" />
-            </div>
+            {user.avatar_url ? (
+              <img
+                src={user.avatar_url}
+                alt={user.name}
+                className="w-24 h-24 rounded-full object-cover border-2 border-amber-400 shadow-xl"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80";
+                }}
+              />
+            ) : (
+              <div className="w-24 h-24 bg-gradient-to-tr from-amber-500 to-amber-700 text-black font-extrabold text-2xl rounded-full flex items-center justify-center shadow-xl">
+                {user.name ? user.name.slice(0, 2).toUpperCase() : 'VIP'}
+              </div>
+            )}
           </div>
           
           <div className="space-y-4">

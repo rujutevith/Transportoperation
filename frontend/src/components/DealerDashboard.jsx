@@ -228,7 +228,15 @@ const DealerDashboard = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {listings.slice(0, 3).map((car) => (
                   <div key={car.id} className="bg-black border border-gray-800 rounded-xl p-3 flex gap-3 items-center">
-                    <img src={car.image_url} alt={car.brand} className="w-16 h-14 object-cover rounded-lg" />
+                    <img 
+                      src={car.image_url} 
+                      alt={car.brand} 
+                      className="w-16 h-14 object-cover rounded-lg" 
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=80";
+                      }}
+                    />
                     <div>
                       <h4 className="font-bold text-xs text-white">{car.brand} {car.model}</h4>
                       <p className="text-[11px] text-amber-400">${car.daily_rental_rate || car.price}/day</p>
@@ -249,7 +257,15 @@ const DealerDashboard = () => {
               {listings.map((car) => (
                 <div key={car.id} className="bg-gray-950 border border-gray-800 rounded-2xl overflow-hidden flex flex-col justify-between">
                   <div className="relative h-44 bg-gray-900">
-                    <img src={car.image_url} alt={car.brand} className="w-full h-full object-cover" />
+                    <img 
+                      src={car.image_url} 
+                      alt={car.brand} 
+                      className="w-full h-full object-cover" 
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=80";
+                      }}
+                    />
                     <span className="absolute top-2 left-2 bg-black/70 text-white text-[10px] font-bold px-2 py-0.5 rounded">
                       {car.listing_type?.toUpperCase()}
                     </span>
@@ -552,7 +568,15 @@ const DealerDashboard = () => {
                       selectedCalendarCar?.id === car.id ? 'bg-amber-400 text-black font-bold' : 'bg-gray-900 text-white hover:bg-gray-800'
                     }`}
                   >
-                    <img src={car.image_url} alt="" className="w-10 h-8 rounded object-cover" />
+                    <img 
+                      src={car.image_url} 
+                      alt="" 
+                      className="w-10 h-8 rounded object-cover" 
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400&q=80";
+                      }}
+                    />
                     <div className="truncate">
                       <p className="truncate">{car.brand} {car.model}</p>
                       <p className="text-[10px] opacity-75">${car.daily_rental_rate || car.price}/day</p>

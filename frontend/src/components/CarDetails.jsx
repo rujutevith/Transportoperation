@@ -4,7 +4,7 @@ import {
   Car, Shield, Clock, Award, Star, ArrowLeft, 
   Calendar, CheckCircle, Heart, DollarSign, Calculator,
   MessageSquare, Sparkles, MapPin, Gauge, Fuel, Check,
-  AlertCircle, Share2, Compass
+  AlertCircle, Share2, Compass, MessageCircle, Phone
 } from 'lucide-react';
 import { carService, rentalService, salesService, wishlistService, messageService, reviewService } from '../services/apiServices';
 import { useAuth } from '../context/AuthContext';
@@ -355,6 +355,10 @@ const CarDetails = () => {
               src={car.image_url}
               alt={`${car.brand} ${car.model}`}
               className="w-full h-full object-cover"
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1200&q=80";
+              }}
               style={{
                 filter: viewAngle === 1 ? 'hue-rotate(20deg) brightness(1.05)' : viewAngle === 2 ? 'contrast(1.1) saturate(1.1)' : 'none'
               }}
@@ -670,6 +674,15 @@ const CarDetails = () => {
                     >
                       {bookingLoading ? 'Reserving...' : 'Book Rental Now'}
                     </button>
+
+                    <a
+                      href={`https://wa.me/250793210519?text=Hello,%20I%20am%20interested%20in%20renting%20the%20${encodeURIComponent(car.brand + ' ' + car.model)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl transition text-xs flex items-center justify-center gap-2"
+                    >
+                      <MessageCircle className="w-4 h-4" /> Rent via WhatsApp (0793210519)
+                    </a>
                   </form>
                 </div>
               )}
@@ -749,6 +762,14 @@ const CarDetails = () => {
                     >
                       <Calendar className="w-4 h-4 text-amber-400" /> Schedule Test Drive
                     </button>
+                    <a
+                      href={`https://wa.me/250793210519?text=Hello,%20I%20want%20to%20buy%20the%20${encodeURIComponent(car.brand + ' ' + car.model)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl transition text-xs flex items-center justify-center gap-2"
+                    >
+                      <MessageCircle className="w-4 h-4" /> Purchase via WhatsApp (0793210519)
+                    </a>
                   </div>
                 </div>
               )}

@@ -11,7 +11,7 @@ class DataStore {
         email: "isingizwetitanthierry@gmail.com",
         password: "$2a$10$rVeiREC.37t6TFl612vMIuEbtZFdIJzHEZKE5tulkcoeiMuBMa/3S", // "king@123"
         role: "admin",
-        phone: "+250 790 068 051",
+        phone: "+250 793 210 519",
         address: "Bugesera, Nyamata, Rwanda",
         avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80",
         is_verified: true,
@@ -23,7 +23,7 @@ class DataStore {
         email: "isingizwekingthierry@gmail.com",
         password: "$2a$10$rVeiREC.37t6TFl612vMIuEbtZFdIJzHEZKE5tulkcoeiMuBMa/3S", // "king@123"
         role: "admin",
-        phone: "+250 790 068 051",
+        phone: "+250 793 210 519",
         address: "Bugesera, Nyamata, Rwanda",
         avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&q=80",
         is_verified: true,

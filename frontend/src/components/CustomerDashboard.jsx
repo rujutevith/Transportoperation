@@ -315,6 +315,10 @@ const CustomerDashboard = () => {
                           src={r.image_url}
                           alt={r.brand}
                           className="w-full h-36 object-cover rounded-xl mb-3"
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=80";
+                          }}
                         />
                       )}
 
@@ -421,7 +425,15 @@ const CustomerDashboard = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {wishlist.map((car) => (
                   <div key={car.id} className="bg-gray-950 border border-gray-800 rounded-2xl overflow-hidden flex flex-col justify-between">
-                    <img src={car.image_url} alt={car.brand} className="w-full h-44 object-cover" />
+                    <img 
+                      src={car.image_url} 
+                      alt={car.brand} 
+                      className="w-full h-44 object-cover" 
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=80";
+                      }}
+                    />
                     <div className="p-4 flex-1 flex flex-col justify-between">
                       <div>
                         <h4 className="font-bold text-sm text-white">{car.brand} {car.model}</h4>

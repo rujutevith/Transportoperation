@@ -11,8 +11,8 @@ const InstagramIcon = () => (
 const About = () => {
   const ownerName = 'Thierry';
   const ownerEmail = 'isingizwekingthierry@gmail.com';
-  const ownerPhone = '+250 790 068 051';
-  const whatsappLink = `https://wa.me/250790068051`;
+  const ownerPhone = '+250 793 210 519';
+  const whatsappLink = `https://wa.me/250793210519`;
   const instagramLink = `https://instagram.com/zodiac45`;
 
   return (
@@ -24,6 +24,10 @@ const About = () => {
             src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1400&q=80" 
             alt="About EliteRent"
             className="w-full h-full object-cover opacity-35"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1400&q=80";
+            }}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black"></div>
         </div>

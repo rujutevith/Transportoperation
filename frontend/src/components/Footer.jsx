@@ -52,7 +52,7 @@ const Footer = () => {
             </p>
             <div className="flex space-x-3">
               <a 
-                href="https://wa.me/250790068051" 
+                href="https://wa.me/250793210519" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="bg-green-600 hover:bg-green-500 text-white p-2.5 rounded-xl transition"

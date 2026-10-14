@@ -23,7 +23,7 @@ const Home = () => {
 
   const heroSlides = [
     {
-      image: "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=1400&q=80",
+      image: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1400&q=80",
       title: "Luxury Car Sales & Rentals",
       subtitle: "Drive Your Ambition in Rwanda",
       description: "Discover verified supercars for sale and executive rental fleets across Kigali & Bugesera.",
@@ -37,14 +37,14 @@ const Home = () => {
       badge: "🏎️ Supercar Flagship"
     },
     {
-      image: "https://images.unsplash.com/photo-1631295868223-63228b10f8a5?w=1400&q=80",
+      image: "https://images.unsplash.com/photo-1563720223185-11003d516935?w=1400&q=80",
       title: "Rolls Royce Ghost",
       subtitle: "The Benchmark of Prestige",
       description: "VIP executive chauffeur service, luxury weddings, and bespoke private procurement.",
       badge: "👑 Royal Elegance"
     },
     {
-      image: "https://images.unsplash.com/photo-1606016151427-5d77f8efb3cc?w=1400&q=80",
+      image: "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=1400&q=80",
       title: "Toyota Land Cruiser V8",
       subtitle: "The King of African Roads",
       description: "Master Rwandan hills, safaris, and diplomatic delegations with rugged luxury.",
@@ -112,7 +112,7 @@ const Home = () => {
   return (
     <div className="bg-black text-white min-h-screen">
       {/* Hero Section */}
-      <div className="relative min-h-[92vh] flex items-center justify-center overflow-hidden pb-16">
+      <div className="relative min-h-[94vh] sm:min-h-screen flex flex-col justify-between overflow-hidden pt-24 pb-8 sm:pb-12">
         {heroSlides.map((slide, index) => (
           <div
             key={index}
@@ -124,63 +124,96 @@ const Home = () => {
               src={slide.image} 
               alt={slide.title}
               className="w-full h-full object-cover"
-              loading="lazy"
+              loading="eager"
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1400&q=80";
+              }}
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/55 to-black"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-black/45 to-black"></div>
           </div>
         ))}
         
-        {/* Floating badge */}
-        <div className="absolute top-8 left-1/2 transform -translate-x-1/2 z-20">
-          <span className="bg-white/10 backdrop-blur-md text-white px-5 py-2 rounded-full text-sm font-semibold border border-white/20 shadow-lg flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-amber-400" />
-            {heroSlides[currentSlide].badge}
-          </span>
-        </div>
+        {/* Upper Zone: Floating Badge & Hero Headline */}
+        <div className="relative z-10 text-center px-4 max-w-5xl mx-auto pt-6 sm:pt-10">
+          <div className="inline-block mb-3 sm:mb-4">
+            <span className="bg-white/10 backdrop-blur-md text-white px-5 py-2 rounded-full text-xs sm:text-sm font-semibold border border-white/20 shadow-lg inline-flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-amber-400" />
+              {heroSlides[currentSlide].badge}
+            </span>
+          </div>
 
-        {/* Hero Content */}
-        <div className="relative z-10 text-center px-4 max-w-5xl mx-auto pt-20">
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-3 bg-gradient-to-r from-white via-gray-100 to-gray-400 bg-clip-text text-transparent">
+          <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-2 sm:mb-3 bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent drop-shadow-lg">
             {heroSlides[currentSlide].title}
           </h1>
-          <h2 className="text-2xl sm:text-4xl font-bold mb-4 text-amber-400">
+          <h2 className="text-xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 text-amber-400 drop-shadow">
             {heroSlides[currentSlide].subtitle}
           </h2>
-          <p className="text-base sm:text-lg text-gray-300 mb-8 max-w-2xl mx-auto font-normal">
+          <p className="text-sm sm:text-base md:text-lg text-gray-300 max-w-2xl mx-auto font-normal drop-shadow">
             {heroSlides[currentSlide].description}
           </p>
 
+          {/* Slide Indicator Dots */}
+          <div className="flex justify-center space-x-2 mt-4 sm:mt-5">
+            {heroSlides.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentSlide(index)}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  index === currentSlide ? 'w-8 bg-amber-400' : 'w-2 bg-white/40 hover:bg-white/70'
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Lower Level: Positioned at Bottom of Hero for Clear Visibility */}
+        <div className="relative z-20 w-full max-w-5xl mx-auto px-4 mt-8 sm:mt-12">
           {/* Prominent Search/Filter Bar with Toggle between "Buy" and "Rent" */}
-          <div className="bg-gray-950/85 backdrop-blur-xl border border-gray-800 rounded-2xl p-4 sm:p-6 shadow-2xl max-w-4xl mx-auto text-left">
+          <div className="bg-gray-950/90 backdrop-blur-2xl border border-gray-800 rounded-2xl p-4 sm:p-6 shadow-2xl text-left hover:border-amber-500/40 transition duration-300">
             {/* Toggle Tabs */}
-            <div className="flex items-center gap-2 mb-4 border-b border-gray-800 pb-3">
-              <button
-                type="button"
-                onClick={() => setListingType('rent')}
-                className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-sm transition-all ${
-                  listingType === 'rent'
-                    ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20'
-                    : 'text-gray-400 hover:text-white hover:bg-gray-900'
-                }`}
-              >
-                <KeyRound className="w-4 h-4" />
-                Rent a Car
-              </button>
-              <button
-                type="button"
-                onClick={() => setListingType('sale')}
-                className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-sm transition-all ${
-                  listingType === 'sale'
-                    ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20'
-                    : 'text-gray-400 hover:text-white hover:bg-gray-900'
-                }`}
-              >
-                <Tag className="w-4 h-4" />
-                Buy a Car
-              </button>
-              <span className="ml-auto text-xs text-gray-400 hidden sm:inline">
-                {listingType === 'rent' ? 'Daily & Weekly Hire' : 'Certified Ownership & Financing'}
-              </span>
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-4 border-b border-gray-800/80 pb-3">
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setListingType('rent')}
+                  className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-sm transition-all ${
+                    listingType === 'rent'
+                      ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/25 scale-102'
+                      : 'text-gray-400 hover:text-white hover:bg-gray-900'
+                  }`}
+                >
+                  <KeyRound className="w-4 h-4" />
+                  Rent a Car
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setListingType('sale')}
+                  className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-sm transition-all ${
+                    listingType === 'sale'
+                      ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/25 scale-102'
+                      : 'text-gray-400 hover:text-white hover:bg-gray-900'
+                  }`}
+                >
+                  <Tag className="w-4 h-4" />
+                  Buy a Car
+                </button>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <span className="text-xs text-gray-400 hidden lg:inline">
+                  {listingType === 'rent' ? 'Daily & Weekly Hire in Bugesera & Kigali' : 'Certified Ownership & 100-Point Inspection'}
+                </span>
+                <a
+                  href="https://wa.me/250793210519"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 text-xs text-green-400 hover:text-green-300 font-semibold bg-green-950/60 border border-green-800/60 px-3 py-1.5 rounded-xl transition"
+                >
+                  <Phone className="w-3.5 h-3.5" /> WhatsApp: 0793210519
+                </a>
+              </div>
             </div>
 
             {/* Filter Form */}
@@ -244,14 +277,23 @@ const Home = () => {
           </div>
 
           {/* Quick CTA links */}
-          <div className="flex flex-wrap items-center justify-center gap-4 mt-6">
-            <Link to="/cars?type=rent" className="text-sm text-gray-300 hover:text-amber-400 underline flex items-center gap-1">
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 mt-4">
+            <Link to="/cars?type=rent" className="text-xs sm:text-sm text-gray-300 hover:text-amber-400 flex items-center gap-1 transition">
               Browse All Rentals <ChevronRight className="w-4 h-4" />
             </Link>
-            <span className="text-gray-600">•</span>
-            <Link to="/cars?type=sale" className="text-sm text-gray-300 hover:text-amber-400 underline flex items-center gap-1">
+            <span className="text-gray-700 hidden sm:inline">•</span>
+            <Link to="/cars?type=sale" className="text-xs sm:text-sm text-gray-300 hover:text-amber-400 flex items-center gap-1 transition">
               Browse Vehicles For Sale <ChevronRight className="w-4 h-4" />
             </Link>
+            <span className="text-gray-700 hidden sm:inline">•</span>
+            <a
+              href="https://wa.me/250793210519"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs sm:text-sm text-green-400 hover:text-green-300 flex items-center gap-1 transition font-medium"
+            >
+              Direct WhatsApp (0793210519) <ChevronRight className="w-4 h-4" />
+            </a>
           </div>
         </div>
 
@@ -410,6 +452,10 @@ const Home = () => {
                     alt={`${car.brand} ${car.model}`}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=80";
+                    }}
                   />
                   <div className="absolute top-3 left-3 bg-amber-500 text-black text-xs font-bold px-3 py-1 rounded-full">
                     For Sale
@@ -486,6 +532,10 @@ const Home = () => {
                     alt={`${car.brand} ${car.model}`}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=80";
+                    }}
                   />
                   <div className="absolute top-3 left-3 bg-white text-black text-xs font-bold px-3 py-1 rounded-full">
                     For Rent
