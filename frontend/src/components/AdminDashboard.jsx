@@ -101,8 +101,8 @@ const AdminDashboard = () => {
   };
 
   const fillDefaultCredentials = () => {
-    setLoginEmail('isingizwetitanthierry@gmail.com');
-    setLoginPassword('king@123');
+    setLoginEmail('');
+    setLoginPassword('');
     toast.success('Admin credentials populated');
   };
 
