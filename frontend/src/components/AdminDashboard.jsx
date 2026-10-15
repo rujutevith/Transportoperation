@@ -250,15 +250,7 @@ const AdminDashboard = () => {
           </form>
 
           {/* Quick Credential Pre-fill Badge */}
-          <div className="mt-6 pt-5 border-t border-gray-900 text-center">
-            <p className="text-[11px] text-gray-500 mb-2">Default Master Credentials:</p>
-            <button
-              onClick={fillDefaultCredentials}
-              className="inline-flex items-center gap-1.5 bg-gray-900 hover:bg-gray-800 border border-gray-800 text-amber-400 text-[11px] font-mono px-3 py-1.5 rounded-lg transition"
-            >
-              <KeyRound className="w-3.5 h-3.5" /> isingizwetitanthierry@gmail.com / king@123
-            </button>
-          </div>
+        
         </div>
       </div>
     );
