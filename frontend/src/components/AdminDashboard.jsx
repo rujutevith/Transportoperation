@@ -100,12 +100,12 @@ const AdminDashboard = () => {
     }
   };
 
-  const fillDefaultCredentials = () => {
-    setLoginEmail('');
-    setLoginPassword('');
-    toast.success('Admin credentials populated');
+  /*const fillDefaultCredentials = () => {
+    setLoginEmail('admin@transportoperation.com');
+    setLoginPassword('king@');
+    toast.success('Admin credentials populated'); autofill=false;
   };
-
+*/
   const handleUpdateRentalStatus = async (rentalId, status) => {
     try {
       await rentalService.updateStatus(rentalId, status);
